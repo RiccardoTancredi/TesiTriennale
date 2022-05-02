@@ -26,7 +26,7 @@ class Graph:
 
     def do_graph(self):
         data = []
-        data.append(pd.read_fwf(self.name))
+        data.append(pd.read_fwf(self.name, colspecs = [(0, 9), (9, 17), (17, 28), (28, 37), (37, -1)]))
         self.data_frame = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets
         
         '''

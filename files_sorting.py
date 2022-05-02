@@ -1,4 +1,3 @@
-from fileinput import filename
 import os.path
 import pandas as pd
 import numpy as np
@@ -9,17 +8,19 @@ class Txt:
         self.dir_name = dir_name
         self.number = str(number)
         self.name = self.dir_name + '/' + self.number
+        self.first_time = False # if the file is open for the first time use method _removeBegin
 
     def _removeBegin(self):
-        a_file = open(self.name+'A.txt', "r")
-        lines = a_file.readlines()
-        a_file.close()
-        if lines[0] == "#Begin Write:":
-            del lines[0]
-        new_file = open(self.name+'A.txt', "w+")
-        for line in lines:
-            new_file.write(line)
-        new_file.close()
+        if self.first_time:
+            a_file = open(self.name+'A.txt', "r")
+            lines = a_file.readlines()
+            a_file.close()
+            if "#Begin Write:" in lines[0]:
+                del lines[0]
+            new_file = open(self.name+'A.txt', "w+")
+            for line in lines:
+                new_file.write(line)
+            new_file.close()
 
     def bricolage(self):
         self._removeBegin()
