@@ -4,7 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import medfilt
 from sklearn.linear_model import LinearRegression
-from scipy.odr import *
+# from scipy.odr import *
+from scipy.optimize import leastsq
 
 class Graph_hop:
     def __init__(self, dir_name, number, number_file) -> None:
@@ -40,23 +41,25 @@ class Graph_hop:
         return self.data_frame
 
 
-    def _doublegaussian(self, B, x):
-        # B is a vector of the parameters:
-        # B = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
-        return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(4*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(4*B[4]))**2)
+    def _doublegaussian(self, params, x):
+        # params is a vector of the parameters:
+        # params = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
+        (c1, mu1, sigma1, c2, mu2, sigma2) = params
+        res =   c1 * np.exp( - (x - mu1)**2.0 / (2.0 * sigma1**2.0) ) \
+          + c2 * np.exp( - (x - mu2)**2.0 / (2.0 * sigma2**2.0) )
+        return res
+        # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
 
-    def fit(self, lista_fit_gaussiano, y, guess:list):
-        # double gaussian fit
-        self.x = np.linspace(lista_fit_gaussiano[0], lista_fit_gaussiano[1], num=y.shape[0])
-        mydata = RealData(self.x, y)
-        doubgauss = Model(self._doublegaussian)
-        myodr = ODR(mydata, doubgauss, beta0=guess)
-        self.myoutput = myodr.run()
-        self.myoutput.pprint()
-        # covariana_matrice = myoutput.cov_beta
-        self.sigma_diagonale = np.sqrt(np.diag(self.myoutput.cov_beta))
-        self._fit_plot()
-        return self.myoutput.beta, self.sigma_diagonale
+    def _double_gaussian_fit(self, params):
+        fitting = self._doublegaussian(params, self.bin)
+        return (fitting - self.values_histogram_bins_proc)
+
+    def fit(self, guess:list):
+        fitting = leastsq(self._double_gaussian_fit, guess)
+        self._fit_plot(fitting)
+        return fitting
+    
+    
 
     def graph(self):
         df_mean = self.data_frame['Y_force'].mean()
@@ -74,15 +77,27 @@ class Graph_hop:
     def histogram(self):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         # scott = int(3.49*self.data_frame['Y_force'].std()/np.cbrt(self.data_frame.shape[0]))
-        plt.ylabel('$f_y$(pN)')
-        plt.xlabel('bins')
-        plt.title(self.name+ ' Force Histogram')
+        plt.xlabel('$f_y$(pN)')
+        plt.ylabel('$p(f)\:[1/pN]$')
+        plt.title(self.name+ ': Force Histogram')
         # self.data_frame['Y_force'].hist(grid=False, bins=rice)
-        plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y')
-        # self._fit_plot()
+        self.values_histogram_bins, bins, patches = plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='vertical', label='Force Y', stacked=True) # y
+        self.bin = [(bins[i+1] + bins[i])/2 for i in range(len(bins)-1)] # x
+        self.values_histogram_bins_proc = np.copy(self.values_histogram_bins)
+        self.values_histogram_bins_proc[self.values_histogram_bins_proc < 0.05] = 0.0
         plt.legend()
+        plt.show()
     
-    def _fit_plot(self):
-        gaussianadoppia = np.vectorize(self._doublegaussian)
-        y_pred = gaussianadoppia(self.myoutput, self.x)
-        plt.plot(self.x, y_pred, color='r', label='Fit')
+    def _fit_plot(self, fitting):
+        rice = int(6*np.cbrt(self.data_frame.shape[0]))
+        plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='vertical', label='Force Y', stacked=True)
+        plt.plot(self.bin, self._doublegaussian(fitting[0], self.bin), c='r', label='Fit')
+        plt.xlabel('$f_y$(pN)')
+        plt.ylabel('$p(f)\:[1/pN]$')
+        plt.title(self.name+ ': Force Histogram + Fit')
+        plt.legend()
+        plt.show()
+
+    def _prova(self):
+        plt.plot(self.bin, self.values_histogram_bins)
+        plt.show()
