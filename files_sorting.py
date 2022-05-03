@@ -73,7 +73,7 @@ class Txt:
 
 
             '''
-                With these two for loops we create the files with single folding and unfolding states
+                With these two for loops we create files with single folding and unfolding states
             '''
             for i in range(len(lista_folding)-1):
                 if lista_folding[i+1] - lista_folding[i] == 1:

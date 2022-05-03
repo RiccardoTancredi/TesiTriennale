@@ -40,12 +40,14 @@ class Graph:
         plt.ylabel('$f_y$(pN)')
         plt.xlabel('$\lambda$(nm)')
         plt.title(self.name)
-        f_F, f_U = self.maximum_f(False)
         # if f_F and f_U:
         #     plt.annotate(f'f_F', xy=(self.data_frame['lambda'][np.where(self.data_frame['Y_force'].values == f_F)[0][0]], f_F),) 
         #     plt.annotate(f'f_U', xy=(self.data_frame['lambda'][np.where(self.data_frame['Y_force'].values == f_U)[0][0]], f_U),) 
         plt.legend()
         plt.show()
+        plt.close()
+        f_F, f_U = self.maximum_f(False)
+
         return [f_F, f_U]
 
     def _check_graph(self, df, df_mean, threshold):
@@ -109,7 +111,7 @@ class Graph:
         for i in range(df_med.size):
             if abs(df_med[i]) > threshold_med:
                 jump_candidates_med.append(i)
-        print(jump_candidates_med)
+        # print(jump_candidates_med)
         # selecting from the candidates the first one that is over the fmin
         jump = 0 # position of our jump, fullfilling 2 criteria above/fmin & dfy of appropriate sign (depending if unfolding/refolding)
         for k in range(len(jump_candidates_med)):
@@ -124,8 +126,10 @@ class Graph:
         if jump == 0:
             print("No jump spotted!")
             self._check_graph(df, df_mean, threshold)
+            return [None, None]
         
-        if jump >= 0:
+        elif jump >= 0:
+            # self._check_graph(df, df_mean, threshold)
             return self._fit(f_y_med, jump)
 
         # df_max = df.max()
@@ -144,7 +148,7 @@ class Graph:
         # print(f"f_F vale {f_F} e f_U vale {f_U}")
 
         # if var and self.df_graph:
-        self._check_graph(df, df_mean, threshold)
+        
         # if f_F > minimum_f_F and f_U > minimum_f_U:
         #     return [f_F, f_U]
 
@@ -161,10 +165,11 @@ class Graph:
         linear_regressor = LinearRegression()  # create object for the class
         reg = linear_regressor.fit(x, y)   # perform linear regression
         y_pred = linear_regressor.predict(x)  # make predictions
+        plt.plot(self.data_frame['lambda'], self.data_frame['Y_force'], label='Y_force')
+        plt.ylabel('$f_y$(pN)')
+        plt.xlabel('$\lambda$(nm)')
         plt.plot(x, y, color='blue', label = 'Data')
         plt.plot(x, y_pred, color='red', label = 'Fit')
-        plt.xlabel('$\lambda$(nm)')
-        plt.ylabel('$f_y$(pN)')
         plt.title('Linear Fit')
         plt.legend()
         plt.show()

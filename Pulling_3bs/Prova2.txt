@@ -1,2 +1,0 @@
-     name   runs status
-0  Dravid  10889    130

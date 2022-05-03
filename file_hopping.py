@@ -56,7 +56,7 @@ class Txt_hop:
                 with open(os.path.join(self.dir_name, self.number+'hop'+'.txt'),'w') as outfile:
                     self.dataframe.to_string(outfile, index=False)
             '''
-                Store in sub files in order to better analyse the single hopping
+                Store in sub files in order to better analyse single hopping events
             '''
             if not os.path.isfile(self.name+'_1'+'.txt'):
                 lista = self._jump()
@@ -67,7 +67,6 @@ class Txt_hop:
                         with open(os.path.join(self.dir_name, self.number+'_'+str(i+1)+'.txt'),'w') as outfile:
                             df2.to_string(outfile, index=False)
         else:
-            print("ciao sono qui")
             data = []
             data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 17), (17, 28), (28, 37), (37, -1)]))
             self.dataframe = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets

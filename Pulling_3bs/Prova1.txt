@@ -1,3 +1,0 @@
-          name   runs status
-0  Jayawardene  12650    130
-1        Kohli  11867    130
