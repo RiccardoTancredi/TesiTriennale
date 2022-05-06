@@ -2,6 +2,7 @@ import os.path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 from scipy.signal import medfilt
 from sklearn.linear_model import LinearRegression
 # from scipy.odr import *
@@ -105,4 +106,35 @@ class Graph_hop:
 
     def _prova(self):
         plt.plot(self.bin, self.values_histogram_bins)
+        plt.show()
+
+    def subplots(self, fitting):
+        df_mean = self.data_frame['Y_force'].mean()
+        df_std = self.data_frame['Y_force'].std()
+        # Setting up the plot surface
+        fig = plt.figure(figsize=(10, 5))
+        gs = GridSpec(nrows=1, ncols=3)
+        # First axes
+        ax0 = fig.add_subplot(gs[0, :2])
+        ax0.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Y_force')
+        ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
+        ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
+        ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
+        ax0.set_ylabel('$f_y$(pN)')
+        ax0.set_xlabel('$t$(s)')
+        ax0.set_title(self.name)
+        ax0.legend()
+        # Second axes
+        rice = int(6*np.cbrt(self.data_frame.shape[0]))
+        ax1 = fig.add_subplot(gs[0, 2])
+        rice = int(6*np.cbrt(self.data_frame.shape[0]))
+        ax1.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
+        ax1.plot(self._doublegaussian(fitting[0], self.bin), self.bin, c='r', label='Fit')
+        ax1.axhline(y = fitting[0][1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
+        ax1.axhline(y = fitting[0][4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
+        # ax1.set_ylabel('$f_y$(pN)')
+        ax1.set_xlabel('$p(f)\:[1/pN]$')
+        ax1.set_title(self.name+ ': Force Histogram + Fit')
+        ax1.legend()
+        
         plt.show()
