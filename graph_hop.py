@@ -14,6 +14,7 @@ class Graph_hop:
         self.number = str(number)
         self.number_file = str(number_file)
         self.name = self.dir_name + '/' + self.number + '_' + self.number_file 
+        self.KBT = 4.11 # pN*nm
         
     def do_graph(self, time_range=None):
         data = []
@@ -61,16 +62,16 @@ class Graph_hop:
         return fitting
     
     
-
     def graph(self):
         df_mean = self.data_frame['Y_force'].mean()
         df_std = self.data_frame['Y_force'].std()
+        print(f"f media vale = {df_mean}, con deviazione standard = {df_std}")
         plt.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Y_force')
         plt.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         plt.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         plt.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')   
-        plt.ylabel('$f_y$(pN)')
-        plt.xlabel('$t$(s)')
+        plt.ylabel('$f_y\:[pN]$')
+        plt.xlabel('$t\:[s]$')
         plt.title(self.name)
         plt.legend()
         plt.show()
@@ -78,7 +79,7 @@ class Graph_hop:
     def histogram(self):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         # scott = int(3.49*self.data_frame['Y_force'].std()/np.cbrt(self.data_frame.shape[0]))
-        plt.xlabel('$f_y$(pN)')
+        plt.xlabel('$f_y\:[pN]$')
         plt.ylabel('$p(f)\:[1/pN]$')
         plt.title(self.name+ ': Force Histogram')
         # self.data_frame['Y_force'].hist(grid=False, bins=rice)
@@ -95,13 +96,17 @@ class Graph_hop:
         plt.plot(self._doublegaussian(fitting[0], self.bin), self.bin, c='r', label='Fit')
         plt.axhline(y = fitting[0][1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
         plt.axhline(y = fitting[0][4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
-        plt.ylabel('$f_y$(pN)')
+        plt.ylabel('$f_y\:[pN]$')
         plt.xlabel('$p(f)\:[1/pN]$')
         plt.title(self.name+ ': Force Histogram + Fit')
         plt.legend()
         plt.show()
         print(f"c_1 = {fitting[0][0]}, mu_1 = {fitting[0][1]}, sigma_1 = {fitting[0][2]}")
         print(f"c_2 = {fitting[0][3]}, mu_2 = {fitting[0][4]}, sigma_2 = {fitting[0][5]}")
+        # w_U = fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)
+        # w_N = fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)
+        print(f"w_U = {fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)}")
+        print(f"w_N = {fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)}")
 
 
     def _prova(self):
@@ -120,8 +125,8 @@ class Graph_hop:
         ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
-        ax0.set_ylabel('$f_y$(pN)')
-        ax0.set_xlabel('$t$(s)')
+        ax0.set_ylabel('$f_y\:[pN]$')
+        ax0.set_xlabel('$t\:[s]$')
         ax0.set_title(self.name)
         ax0.legend()
         # Second axes
@@ -138,3 +143,27 @@ class Graph_hop:
         ax1.legend()
         
         plt.show()
+
+
+    def deltaG(self, w_U, w_N, forces):
+        # linear fit: k_B T log(w_U/w_N) = (f-f_c)*x_NU = m*f + q, m = x_NU, q = f_c*x_NU 
+        y = np.array([self.KBT*np.log(w_U[i]/w_N[i]) for i in range(len(w_U))]).reshape(-1, 1)
+        x = np.array(forces).reshape(-1, 1)
+        linear_regressor = LinearRegression()  # create object for the class
+        reg = linear_regressor.fit(x, y)   # perform linear regression
+        y_pred = linear_regressor.predict(x)  # make predictions
+        plt.ylabel('$ln(\frac{w_U}{w_N})$')
+        plt.xlabel('$f\:[pN]$')
+        plt.scatter(x, y, color='blue', label = 'Data')
+        plt.plot(x, y_pred, color='red', label = 'Fit')
+        plt.title('$w_U/w_N \: Fit$')
+        plt.legend()
+        plt.show()
+        m = reg.coef_[0][0] # angular coefficient
+        q = reg.intercept_[0] # intercept
+        x_NU = -m
+        f_c = -q/m
+        print(f"La forza di coesistenza vale f_c = {f_c}")
+        print(f"La differenza di lunghezza tra lo stato foldend e unfolded è x_NU = {x_NU}")
+        return x_NU, f_c
+        
