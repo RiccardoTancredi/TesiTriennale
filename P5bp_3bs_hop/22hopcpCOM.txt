@@ -1,0 +1,168 @@
+Instrument name = ltBCN
+*****Calibration values *****
+TrapA Temperature Fudge	-11.500000
+TrapB Temperature Fudge	-12.400000
+Radius Calibration Value	0.090226
+TrapA Force Sensitivity	0.020940	0.020200	0.011600
+TrapB Force Sensitivity	0.020940	0.020200	0.011600
+TrapA Lever Sensitivity	14259.000000	15259.000000	0.000000
+TrapB Lever Sensitivity	14222.000000	16194.000000	0.000000
+Motor Threshold	30	29	28
+*****Initial Preference Settings*****
+ForceRateDiv	3
+ForceGain	30
+PosRateDivA	-4
+PosRateDivB	0
+PositionGainA	-2
+PositionGainB	50
+GotoSpeedX	15
+GotoSpeedY	15
+GotoSpeedZ	7
+MaxDataFileSize	100000000
+HopDistance	10
+DeltaDA	10
+PullRateDivider	1
+*CycleCount/n____	1
+*A_PsdX__________	1
+*A_PsdY__________	1
+*A_PsdSum________	1
+*A_Iris__________	0
+*A_LeverX________	1
+*A_LeverY________	1
+*A_LeverSum______	1
+*B_PsdX__________	1
+*B_PsdY__________	1
+*B_PsdSum________	1
+*B_Iris__________	0
+*B_LeverX________	1
+*B_LeverY________	1
+*B_LeverSum______	1
+*A_Temperature___	1
+*B_Temperature___	1
+*X_force_________	1
+*A_forceX________	1
+*B_forceX________	1
+*Y_force_________	1
+*A_forceY________	1
+*B_forceY________	1
+*Z_force_________	1
+*A_forceZ________	1
+*B_forceZ________	1
+*Tension_________	0
+*A_dist-X________	1
+*A_dist-Y________	1
+*B_dist-X________	1
+*B_dist-Y________	1
+*Rel_dist_X______	0
+*Rel_dist_Y______	0
+*Motor_X_________	1
+*Motor_Y_________	1
+*Motor_Z_________	1
+*MotorVel_X______	0
+*MotorVel_Y______	0
+*MotorVel_Z______	0
+*BeadDis_X_______	0
+*BeadDis_Y_______	0
+*A_trapPIC_Err___	0
+*B_trapPIC_Err___	0
+*comPIC_Err______	0
+*A_CycleCount____	0
+*B_CycleCount____	0
+*Motor_CycleCount	0
+*time(sec)_______	1
+*Status__________	1
+*Null____________	0
+samples/line_HI	400
+samples/line_LO	4
+goto0	0	0	0
+goto1	8359874	8334013	8388110
+goto2	8396344	8359148	8389028
+goto3	8397012	8329721	8399091
+goto4	8354639	8402523	8396507
+goto5	0	0	0
+goto6	0	0	0
+goto7	0	0	0
+goto8	0	0	0
+goto9	0	0	0
+yourXYZint	123	456	789
+MaxForceP1	12.000000
+MinForceP1	1.500000
+PullRateP1	100.000000
+refoldTime1	0.000000
+MaxForceP2	75.000000
+MinForceP2	4.000000
+PullRateP2	100.000000
+refoldTime2	0.000000
+constForce1	20.000000
+constForce2	15.500000
+MaxForcePulling	20.000000
+MinForcePulling	8.000000
+refoldTimePullinBeadDiameter	0.000000
+BeadDiameter	6.000000
+FinalForceM	12.000000
+yourFloat	1.234000
+yourXYZfloat	1.000000	2.000000	3.000000
+Initial Bead Position X		0.000
+Initial Bead Position Y	 0.000
+Final Bead Position X	 0.000
+Final Bead Position Y	 0.000
+Radius Calibration Value	 0.090226
+Radius Bead 1	 0.000
+Radius Bead 2	 0.000
+*****End Initial Preference Settings*****
+
+
+8661	tempA = 24.038	tempB = 23.278
+18680	tempA = 24.042	tempB = 23.265
+28672	tempA = 24.040	tempB = 23.283
+38685	tempA = 24.045	tempB = 23.278
+41970	TrapA autoAlign ON.
+48689	tempA = 24.042	tempB = 23.278
+58686	tempA = 24.040	tempB = 23.275
+68684	tempA = 24.042	tempB = 23.278
+70776	TrapA autoAlign ON.
+78693	tempA = 24.039	tempB = 23.267
+88703	tempA = 24.041	tempB = 23.268
+96501	TrapA autoAlign ON.
+98687	tempA = 24.038	tempB = 23.278
+108698	tempA = 24.037	tempB = 23.278
+117917	TrapA autoAlign ON.
+118680	tempA = 24.035	tempB = 23.274
+128664	tempA = 24.041	tempB = 23.273
+138657	tempA = 24.044	tempB = 23.271
+148653	tempA = 24.030	tempB = 23.261
+153658	TrapA autoAlign ON.
+158654	tempA = 24.032	tempB = 23.279
+168655	tempA = 24.033	tempB = 23.263
+178658	tempA = 24.047	tempB = 23.261
+188656	tempA = 24.025	tempB = 23.271
+198660	tempA = 24.029	tempB = 23.268
+208643	tempA = 24.036	tempB = 23.269
+218652	tempA = 24.030	tempB = 23.266
+228654	tempA = 24.030	tempB = 23.272
+238646	tempA = 24.035	tempB = 23.276
+248645	tempA = 24.030	tempB = 23.267
+258657	tempA = 24.026	tempB = 23.274
+268658	tempA = 24.037	tempB = 23.267
+278657	tempA = 24.030	tempB = 23.271
+288657	tempA = 24.031	tempB = 23.266
+298697	tempA = 24.039	tempB = 23.279
+308707	tempA = 24.020	tempB = 23.260
+318697	tempA = 24.044	tempB = 23.264
+328692	tempA = 24.029	tempB = 23.253
+338704	tempA = 24.027	tempB = 23.266
+348685	tempA = 24.028	tempB = 23.269
+358717	tempA = 24.029	tempB = 23.264
+368700	tempA = 24.026	tempB = 23.270
+378700	tempA = 24.023	tempB = 23.278
+388706	tempA = 24.025	tempB = 23.274
+398716	tempA = 24.019	tempB = 23.259
+408716	tempA = 24.034	tempB = 23.263
+418699	tempA = 24.018	tempB = 23.257
+428704	tempA = 24.040	tempB = 23.261
+438726	tempA = 24.034	tempB = 23.262
+448736	tempA = 24.027	tempB = 23.262
+458726	tempA = 24.024	tempB = 23.257
+468739	tempA = 24.023	tempB = 23.255
+478737	tempA = 24.020	tempB = 23.268
+488308	End Write

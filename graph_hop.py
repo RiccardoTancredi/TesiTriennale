@@ -47,8 +47,8 @@ class Graph_hop:
         # params is a vector of the parameters:
         # params = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
         (c1, mu1, sigma1, c2, mu2, sigma2) = params
-        res =   c1 * np.exp( - (x - mu1)**2.0 / (4.0 * sigma1**2.0) ) \
-          + c2 * np.exp( - (x - mu2)**2.0 / (4.0 * sigma2**2.0) )
+        res =   c1 * np.exp( - (x - mu1)**2.0 / (2.0 * sigma1**2.0) ) \
+          + c2 * np.exp( - (x - mu2)**2.0 / (2.0 * sigma2**2.0) )
         return res
         # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
 
@@ -57,9 +57,21 @@ class Graph_hop:
         return (fitting - self.values_histogram_bins_proc)
 
     def fit(self, guess:list):
-        fitting = leastsq(self._double_gaussian_fit, guess)
+        fitting= leastsq(self._double_gaussian_fit, guess) # pcov, infodict, errmsg, success
         self._fit_plot(fitting)
-        return fitting
+        # if pcov is not None:
+        #     s_sq = (self._double_gaussian_fit(guess)**2).sum()/(self.values_histogram_bins_proc.shape[0]-len(guess))
+        #     pcov = pcov * s_sq
+        # else:
+        #     pcov = np.inf
+        # error = []
+        # for i in range(len(fitting[0])):
+        #     try:
+        #         error.append(np.abs(pcov[i][i])**0.5)
+        #     except:
+        #         error.append(0.00)
+        # err_leastsq = np.array(error)
+        return fitting # , err_leastsq
     
     
     def graph(self):
@@ -70,8 +82,8 @@ class Graph_hop:
         plt.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         plt.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         plt.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')   
-        plt.ylabel('$f_y\:[pN]$')
-        plt.xlabel('$t\:[s]$')
+        plt.xlabel('$f_y\:[pN]$')
+        plt.ylabel('$t\:[s]$')
         plt.title(self.name)
         plt.legend()
         plt.show()
@@ -118,7 +130,7 @@ class Graph_hop:
         df_std = self.data_frame['Y_force'].std()
         # Setting up the plot surface
         fig = plt.figure(figsize=(10, 5))
-        gs = GridSpec(nrows=1, ncols=3)
+        gs = GridSpec(nrows=1, ncols=4)
         # First axes
         ax0 = fig.add_subplot(gs[0, :2])
         ax0.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Y_force')
@@ -131,17 +143,18 @@ class Graph_hop:
         ax0.legend()
         # Second axes
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
-        ax1 = fig.add_subplot(gs[0, 2])
+        ax1 = fig.add_subplot(gs[0, 2:4])
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         ax1.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
         ax1.plot(self._doublegaussian(fitting[0], self.bin), self.bin, c='r', label='Fit')
         ax1.axhline(y = fitting[0][1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
         ax1.axhline(y = fitting[0][4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
         # ax1.set_ylabel('$f_y$(pN)')
+        ax1.set_yticks([])
         ax1.set_xlabel('$p(f)\:[1/pN]$')
         ax1.set_title(self.name+ ': Force Histogram + Fit')
         ax1.legend()
-        
+        plt.subplots_adjust(wspace=0.03,)
         plt.show()
 
 
@@ -152,7 +165,7 @@ class Graph_hop:
         linear_regressor = LinearRegression()  # create object for the class
         reg = linear_regressor.fit(x, y)   # perform linear regression
         y_pred = linear_regressor.predict(x)  # make predictions
-        plt.ylabel('$ln(\frac{w_U}{w_N})$')
+        plt.ylabel('ln(w_U/w_N)')
         plt.xlabel('$f\:[pN]$')
         plt.scatter(x, y, color='blue', label = 'Data')
         plt.plot(x, y_pred, color='red', label = 'Fit')
@@ -163,7 +176,9 @@ class Graph_hop:
         q = reg.intercept_[0] # intercept
         x_NU = -m
         f_c = -q/m
+        DeltaG_NU = q
         print(f"La forza di coesistenza vale f_c = {f_c}")
         print(f"La differenza di lunghezza tra lo stato foldend e unfolded è x_NU = {x_NU}")
-        return x_NU, f_c
+        print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}")
+        return x_NU, f_c, DeltaG_NU
         
