@@ -52,26 +52,33 @@ class Graph_hop:
         return res
         # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
 
-    def _double_gaussian_fit(self, params):
-        fitting = self._doublegaussian(params, self.bin)
-        return (fitting - self.values_histogram_bins_proc)
+    def _double_gaussian_fit(self, params, errors=False):
+        if not errors:
+            fitting = self._doublegaussian(params, self.bin)
+            return (fitting - self.values_histogram_bins_proc)
+        else:
+            self.doublegaussian_1 = np.vectorize(self._doublegaussian, excluded=['params'])
+            parameters = np.copy(params)
+            fitting = self.doublegaussian_1(params=parameters, x=self.bin)
+            return (fitting - self.values_histogram_bins_proc)
+
 
     def fit(self, guess:list):
-        fitting= leastsq(self._double_gaussian_fit, guess) # pcov, infodict, errmsg, success
-        self._fit_plot(fitting)
-        # if pcov is not None:
-        #     s_sq = (self._double_gaussian_fit(guess)**2).sum()/(self.values_histogram_bins_proc.shape[0]-len(guess))
-        #     pcov = pcov * s_sq
-        # else:
-        #     pcov = np.inf
-        # error = []
-        # for i in range(len(fitting[0])):
-        #     try:
-        #         error.append(np.abs(pcov[i][i])**0.5)
-        #     except:
-        #         error.append(0.00)
-        # err_leastsq = np.array(error)
-        return fitting # , err_leastsq
+        fitting, pcov, infodict, errmsg, success = leastsq(self._double_gaussian_fit, guess, full_output=1, epsfcn=0.0001) # pcov, infodict, errmsg, success
+        if pcov is not None:
+            s_sq = (self._double_gaussian_fit(fitting.tolist(), True)**2).sum()/(self.values_histogram_bins_proc.shape[0]-len(guess))
+            pcov = pcov * s_sq
+        else:
+            pcov = np.inf
+        error = []
+        for i in range(len(fitting)):
+            try:
+                error.append(np.abs(pcov[i][i])**0.5)
+            except:
+                error.append(0.00)
+        err_leastsq = np.array(error)
+        prob, err_prob = self._fit_plot(fitting, err_leastsq)
+        return fitting, err_leastsq, prob, err_prob
     
     
     def graph(self):
@@ -102,23 +109,30 @@ class Graph_hop:
         plt.legend()
         plt.show()
     
-    def _fit_plot(self, fitting):
+    def _fit_plot(self, fitting, err_leastsq):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
-        plt.plot(self._doublegaussian(fitting[0], self.bin), self.bin, c='r', label='Fit')
-        plt.axhline(y = fitting[0][1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
-        plt.axhline(y = fitting[0][4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
+        plt.plot(self._doublegaussian(fitting, self.bin), self.bin, c='r', label='Fit')
+        plt.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
+        plt.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
         plt.ylabel('$f_y\:[pN]$')
         plt.xlabel('$p(f)\:[1/pN]$')
         plt.title(self.name+ ': Force Histogram + Fit')
         plt.legend()
         plt.show()
-        print(f"c_1 = {fitting[0][0]}, mu_1 = {fitting[0][1]}, sigma_1 = {fitting[0][2]}")
-        print(f"c_2 = {fitting[0][3]}, mu_2 = {fitting[0][4]}, sigma_2 = {fitting[0][5]}")
+        print(f"c_1 = {fitting[0]}, mu_1 = {fitting[1]}, sigma_1 = {fitting[2]}")
+        print(f"c_2 = {fitting[3]}, mu_2 = {fitting[4]}, sigma_2 = {fitting[5]}")
+        print(f"sigma_c_1 = {err_leastsq[0]}, sigma_mu_1 = {err_leastsq[1]}, sigma_sigma_1 = {err_leastsq[2]}")
+        print(f"sigma_c_2 = {err_leastsq[3]}, sigma_mu_2 = {err_leastsq[4]}, sigma_sigma_2 = {err_leastsq[5]}")
         # w_U = fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)
         # w_N = fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)
-        print(f"w_U = {fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)}")
-        print(f"w_N = {fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)}")
+        w_U = fitting[0]*np.sqrt(2*np.pi*fitting[2]**2)
+        w_N = fitting[3]*np.sqrt(2*np.pi*fitting[5]**2)
+        sigma_w_U = w_U*np.sqrt((err_leastsq[0]/fitting[0])**2 + (err_leastsq[2]/fitting[2])**2)
+        sigma_w_N = w_N*np.sqrt((err_leastsq[3]/fitting[3])**2 + (err_leastsq[5]/fitting[5])**2)
+        print(f"w_U = {w_U}, sigma_w_U = {sigma_w_U}")
+        print(f"w_N = {w_N}, sigma_w_N = {sigma_w_N}")
+        return [w_U, w_N], [sigma_w_U, sigma_w_N]
 
 
     def _prova(self):
@@ -146,9 +160,9 @@ class Graph_hop:
         ax1 = fig.add_subplot(gs[0, 2:4])
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         ax1.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
-        ax1.plot(self._doublegaussian(fitting[0], self.bin), self.bin, c='r', label='Fit')
-        ax1.axhline(y = fitting[0][1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
-        ax1.axhline(y = fitting[0][4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
+        ax1.plot(self._doublegaussian(fitting, self.bin), self.bin, c='r', label='Fit')
+        ax1.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
+        ax1.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
         # ax1.set_ylabel('$f_y$(pN)')
         ax1.set_yticks([])
         ax1.set_xlabel('$p(f)\:[1/pN]$')
