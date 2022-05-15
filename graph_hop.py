@@ -3,10 +3,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-from scipy.signal import medfilt
-from sklearn.linear_model import LinearRegression
+# from scipy.signal import medfilt
+# from sklearn.linear_model import LinearRegression
 # from scipy.odr import *
-from scipy.optimize import leastsq
+from scipy.optimize import leastsq, curve_fit
+from sklearn.model_selection import fit_grid_point
 
 class Graph_hop:
     def __init__(self, dir_name, number, number_file) -> None:
@@ -135,11 +136,11 @@ class Graph_hop:
         return [w_U, w_N], [sigma_w_U, sigma_w_N]
 
 
-    def _prova(self):
-        plt.plot(self.bin, self.values_histogram_bins)
-        plt.show()
+    # def _prova(self):
+    #     plt.plot(self.bin, self.values_histogram_bins)
+    #     plt.show()
 
-    def subplots(self, fitting):
+    def subplots(self, fitting, n_points_fig=None):
         df_mean = self.data_frame['Y_force'].mean()
         df_std = self.data_frame['Y_force'].std()
         # Setting up the plot surface
@@ -147,10 +148,13 @@ class Graph_hop:
         gs = GridSpec(nrows=1, ncols=4)
         # First axes
         ax0 = fig.add_subplot(gs[0, :2])
-        ax0.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Y_force')
+        n_points = self.data_frame.shape[0] if not n_points_fig else n_points_fig
+        ax0.plot(self.data_frame['time(sec)'][:n_points], self.data_frame['Y_force'][:n_points], label='Y_force')
         ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
+        states_hhm = self.hmm(fitting)
+        ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], label='HMM')
         ax0.set_ylabel('$f_y\:[pN]$')
         ax0.set_xlabel('$t\:[s]$')
         ax0.set_title(self.name)
@@ -171,14 +175,34 @@ class Graph_hop:
         plt.subplots_adjust(wspace=0.03,)
         plt.show()
 
+    def _linear(self, x, m, q):
+        # params is a vector of the parameters:
+        # params = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
+        res =   m*x+q
+        return res
+        # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
 
-    def deltaG(self, w_U, w_N, forces):
+    def _linear_fit(self, x, y, params, sigma_y=None):
+        linear = np.vectorize(self._linear,  excluded=['params'])
+        popt, pcov = curve_fit(linear, x, y, params, sigma_y, True)
+        sigmas = np.sqrt(np.diag(pcov))
+        return popt, sigmas
+
+    def deltaG(self, w_U, w_N, forces, par=None):
         # linear fit: k_B T log(w_U/w_N) = (f-f_c)*x_NU = m*f + q, m = x_NU, q = f_c*x_NU 
-        y = np.array([self.KBT*np.log(w_U[i]/w_N[i]) for i in range(len(w_U))]).reshape(-1, 1)
-        x = np.array(forces).reshape(-1, 1)
-        linear_regressor = LinearRegression()  # create object for the class
-        reg = linear_regressor.fit(x, y)   # perform linear regression
-        y_pred = linear_regressor.predict(x)  # make predictions
+        y = [self.KBT*np.log(w_U[i]/w_N[i]) for i in range(len(w_U))]
+        sigma_y = None
+        x = forces
+        ### New method
+        guess = [-12.5, 59.6] if not par else par
+        (m, q), (sigma_m, sigma_q) = self._linear_fit(x, y, guess)
+        # linear_regressor = LinearRegression()  # create object for the class
+        # reg = linear_regressor.fit(x, y)   # perform linear regression
+        # y_pred = linear_regressor.predict(x)  # make predictions
+        linear = np.vectorize(self._linear,  excluded=['m', 'q'])
+        y_pred = linear(x=x, m=m, q=q)
+        y = np.array(y).reshape(-1, 1)
+        x = np.array(x).reshape(-1, 1)
         plt.ylabel('ln(w_U/w_N)')
         plt.xlabel('$f\:[pN]$')
         plt.scatter(x, y, color='blue', label = 'Data')
@@ -186,8 +210,8 @@ class Graph_hop:
         plt.title('$w_U/w_N \: Fit$')
         plt.legend()
         plt.show()
-        m = reg.coef_[0][0] # angular coefficient
-        q = reg.intercept_[0] # intercept
+        # m = reg.coef_[0][0] # angular coefficient
+        # q = reg.intercept_[0] # intercept
         x_NU = -m
         f_c = -q/m
         DeltaG_NU = q
@@ -196,3 +220,21 @@ class Graph_hop:
         print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}")
         return x_NU, f_c, DeltaG_NU
         
+
+        # Hidden Markov Model
+    def hmm(self, fitting):
+        (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
+        states = []
+        for mis in self.data_frame['Y_force']:
+            prob_1 = self._gaussian(mis, [mu1, sigma1])
+            prob_2 = self._gaussian(mis, [mu2, sigma2])
+            if prob_1>prob_2:
+                states.append(mu1)
+            else:
+                states.append(mu2)
+        return np.array(states)
+
+
+    def _gaussian(self, x, par):
+        mu, sigma = par
+        return np.exp(- (x - mu)**2.0 / (2.0 * sigma**2.0) )/np.sqrt(2*np.pi*sigma)
