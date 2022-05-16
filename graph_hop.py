@@ -140,7 +140,7 @@ class Graph_hop:
     #     plt.plot(self.bin, self.values_histogram_bins)
     #     plt.show()
 
-    def subplots(self, fitting, n_points_fig=None):
+    def subplots(self, fitting, Markov=True, n_points_fig=None):
         df_mean = self.data_frame['Y_force'].mean()
         df_std = self.data_frame['Y_force'].std()
         # Setting up the plot surface
@@ -153,8 +153,9 @@ class Graph_hop:
         ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
-        states_hhm = self.hmm(fitting)
-        ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], label='HMM')
+        if Markov:
+            states_hhm = self.hmm(fitting)
+            ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], color = 'm', label='HMM')
         ax0.set_ylabel('$f_y\:[pN]$')
         ax0.set_xlabel('$t\:[s]$')
         ax0.set_title(self.name)
@@ -188,14 +189,14 @@ class Graph_hop:
         sigmas = np.sqrt(np.diag(pcov))
         return popt, sigmas
 
-    def deltaG(self, w_U, w_N, forces, par=None):
+    def deltaG(self, w_U, w_N, forces, sigma_w_U, sigma_w_N, par=None):
         # linear fit: k_B T log(w_U/w_N) = (f-f_c)*x_NU = m*f + q, m = x_NU, q = f_c*x_NU 
         y = [self.KBT*np.log(w_U[i]/w_N[i]) for i in range(len(w_U))]
-        sigma_y = None
+        sigma_y = [self.KBT*np.sqrt((sigma_w_U[i]/w_U[i])**2+(sigma_w_N[i]/w_N[i])**2) for i in range(len(sigma_w_N))]
         x = forces
         ### New method
         guess = [-12.5, 59.6] if not par else par
-        (m, q), (sigma_m, sigma_q) = self._linear_fit(x, y, guess)
+        (m, q), (sigma_m, sigma_q) = self._linear_fit(x, y, guess, sigma_y)
         # linear_regressor = LinearRegression()  # create object for the class
         # reg = linear_regressor.fit(x, y)   # perform linear regression
         # y_pred = linear_regressor.predict(x)  # make predictions
@@ -203,22 +204,25 @@ class Graph_hop:
         y_pred = linear(x=x, m=m, q=q)
         y = np.array(y).reshape(-1, 1)
         x = np.array(x).reshape(-1, 1)
-        plt.ylabel('ln(w_U/w_N)')
+        plt.ylabel('$ln(w_U\:/\:w_N)$')
         plt.xlabel('$f\:[pN]$')
-        plt.scatter(x, y, color='blue', label = 'Data')
+        plt.errorbar(x, y, sigma_y, fmt = 'o', color='blue', label = 'Data')
         plt.plot(x, y_pred, color='red', label = 'Fit')
-        plt.title('$w_U/w_N \: Fit$')
+        plt.title('$w_U\:/\:w_N \:- Linear\: Fit$')
         plt.legend()
         plt.show()
         # m = reg.coef_[0][0] # angular coefficient
         # q = reg.intercept_[0] # intercept
         x_NU = -m
+        sigma_x_nU = sigma_m
         f_c = -q/m
+        sigma_f_c = f_c*np.sqrt((sigma_q/q)**2+(sigma_m/m)**2)
         DeltaG_NU = q
-        print(f"La forza di coesistenza vale f_c = {f_c}")
-        print(f"La differenza di lunghezza tra lo stato foldend e unfolded è x_NU = {x_NU}")
-        print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}")
-        return x_NU, f_c, DeltaG_NU
+        sigma_DeltaG_NU = sigma_q
+        print(f"La forza di coesistenza vale f_c = {f_c}, con sigma = {sigma_f_c}")
+        print(f"La differenza di lunghezza tra lo stato foldend e unfolded è x_NU = {x_NU}, con sigma = {sigma_x_nU}")
+        print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}, con sigma = {sigma_DeltaG_NU}")
+        return (x_NU, sigma_x_nU), (f_c, sigma_f_c), (DeltaG_NU, sigma_DeltaG_NU)
         
 
         # Hidden Markov Model
