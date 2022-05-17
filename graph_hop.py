@@ -46,7 +46,7 @@ class Graph_hop:
 
     def _doublegaussian(self, params, x):
         # params is a vector of the parameters:
-        # params = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
+        # params = [f_F, sigma_F, w_F, f_U, sigma_U, w_U]
         (c1, mu1, sigma1, c2, mu2, sigma2) = params
         res =   c1 * np.exp( - (x - mu1)**2.0 / (2.0 * sigma1**2.0) ) \
           + c2 * np.exp( - (x - mu2)**2.0 / (2.0 * sigma2**2.0) )
@@ -125,12 +125,12 @@ class Graph_hop:
         print(f"c_2 = {fitting[3]}, mu_2 = {fitting[4]}, sigma_2 = {fitting[5]}")
         print(f"sigma_c_1 = {err_leastsq[0]}, sigma_mu_1 = {err_leastsq[1]}, sigma_sigma_1 = {err_leastsq[2]}")
         print(f"sigma_c_2 = {err_leastsq[3]}, sigma_mu_2 = {err_leastsq[4]}, sigma_sigma_2 = {err_leastsq[5]}")
-        # w_U = fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)
-        # w_N = fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)
-        w_U = fitting[0]*np.sqrt(2*np.pi*fitting[2]**2)
-        w_N = fitting[3]*np.sqrt(2*np.pi*fitting[5]**2)
-        sigma_w_U = w_U*np.sqrt((err_leastsq[0]/fitting[0])**2 + (err_leastsq[2]/fitting[2])**2)
-        sigma_w_N = w_N*np.sqrt((err_leastsq[3]/fitting[3])**2 + (err_leastsq[5]/fitting[5])**2)
+        # w_N = fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)
+        # w_U = fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)
+        w_N = fitting[0]*np.sqrt(2*np.pi*fitting[2]**2)
+        w_U = fitting[3]*np.sqrt(2*np.pi*fitting[5]**2)
+        sigma_w_N = w_U*np.sqrt((err_leastsq[0]/fitting[0])**2 + (err_leastsq[2]/fitting[2])**2)
+        sigma_w_U = w_N*np.sqrt((err_leastsq[3]/fitting[3])**2 + (err_leastsq[5]/fitting[5])**2)
         print(f"w_U = {w_U}, sigma_w_U = {sigma_w_U}")
         print(f"w_N = {w_N}, sigma_w_N = {sigma_w_N}")
         return [w_U, w_N], [sigma_w_U, sigma_w_N]
@@ -178,7 +178,7 @@ class Graph_hop:
 
     def _linear(self, x, m, q):
         # params is a vector of the parameters:
-        # params = [f_U, sigma_U, w_U, f_F, sigma_F, w_F]
+        # params = [f_F, sigma_F, w_F, f_U, sigma_U, w_U]
         res =   m*x+q
         return res
         # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
