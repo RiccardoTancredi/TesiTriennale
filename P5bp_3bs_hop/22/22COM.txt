@@ -1,0 +1,718 @@
+Instrument name = ltBCN
+*****Calibration values *****
+TrapA Temperature Fudge	-11.500000
+TrapB Temperature Fudge	-12.400000
+Radius Calibration Value	0.090226
+TrapA Force Sensitivity	0.020940	0.020200	0.011600
+TrapB Force Sensitivity	0.020940	0.020200	0.011600
+TrapA Lever Sensitivity	14259.000000	15259.000000	0.000000
+TrapB Lever Sensitivity	14222.000000	16194.000000	0.000000
+Motor Threshold	30	29	28
+*****Initial Preference Settings*****
+ForceRateDiv	3
+ForceGain	30
+PosRateDivA	-4
+PosRateDivB	0
+PositionGainA	-2
+PositionGainB	50
+GotoSpeedX	15
+GotoSpeedY	15
+GotoSpeedZ	7
+MaxDataFileSize	100000000
+HopDistance	10
+DeltaDA	10
+PullRateDivider	1
+*CycleCount/n____	1
+*A_PsdX__________	1
+*A_PsdY__________	1
+*A_PsdSum________	1
+*A_Iris__________	0
+*A_LeverX________	1
+*A_LeverY________	1
+*A_LeverSum______	1
+*B_PsdX__________	1
+*B_PsdY__________	1
+*B_PsdSum________	1
+*B_Iris__________	0
+*B_LeverX________	1
+*B_LeverY________	1
+*B_LeverSum______	1
+*A_Temperature___	1
+*B_Temperature___	1
+*X_force_________	1
+*A_forceX________	1
+*B_forceX________	1
+*Y_force_________	1
+*A_forceY________	1
+*B_forceY________	1
+*Z_force_________	1
+*A_forceZ________	1
+*B_forceZ________	1
+*Tension_________	0
+*A_dist-X________	1
+*A_dist-Y________	1
+*B_dist-X________	1
+*B_dist-Y________	1
+*Rel_dist_X______	0
+*Rel_dist_Y______	0
+*Motor_X_________	1
+*Motor_Y_________	1
+*Motor_Z_________	1
+*MotorVel_X______	0
+*MotorVel_Y______	0
+*MotorVel_Z______	0
+*BeadDis_X_______	0
+*BeadDis_Y_______	0
+*A_trapPIC_Err___	0
+*B_trapPIC_Err___	0
+*comPIC_Err______	0
+*A_CycleCount____	0
+*B_CycleCount____	0
+*Motor_CycleCount	0
+*time(sec)_______	1
+*Status__________	1
+*Null____________	0
+samples/line_HI	400
+samples/line_LO	4
+goto0	0	0	0
+goto1	8359745	8334104	8387936
+goto2	8396344	8359148	8389028
+goto3	8397012	8329721	8399091
+goto4	8354639	8402523	8396507
+goto5	0	0	0
+goto6	0	0	0
+goto7	0	0	0
+goto8	0	0	0
+goto9	0	0	0
+yourXYZint	123	456	789
+MaxForceP1	12.000000
+MinForceP1	1.500000
+PullRateP1	100.000000
+refoldTime1	0.000000
+MaxForceP2	75.000000
+MinForceP2	4.000000
+PullRateP2	100.000000
+refoldTime2	0.000000
+constForce1	20.000000
+constForce2	15.500000
+MaxForcePulling	20.000000
+MinForcePulling	8.000000
+refoldTimePullinBeadDiameter	0.000000
+BeadDiameter	6.000000
+FinalForceM	12.000000
+yourFloat	1.234000
+yourXYZfloat	1.000000	2.000000	3.000000
+Initial Bead Position X		0.000
+Initial Bead Position Y	 0.000
+Final Bead Position X	 0.000
+Final Bead Position Y	 0.000
+Radius Calibration Value	 0.090226
+Radius Bead 1	 0.000
+Radius Bead 2	 0.000
+*****End Initial Preference Settings*****
+
+
+1781	manual move motors 
+4270	tempA = 24.096	tempB = 23.297
+14275	tempA = 24.089	tempB = 23.285
+22525	Zero Forces
+24265	tempA = 24.097	tempB = 23.275
+29849	Zero Forces
+34281	tempA = 24.095	tempB = 23.276
+36945	Zero Forces
+43230	Zero Forces
+44281	tempA = 24.098	tempB = 23.288
+46125	Zero Forces
+54267	tempA = 24.088	tempB = 23.279
+64262	tempA = 24.088	tempB = 23.279
+74260	tempA = 24.078	tempB = 23.273
+84250	tempA = 24.081	tempB = 23.286
+94246	tempA = 24.076	tempB = 23.283
+104246	tempA = 24.082	tempB = 23.292
+114252	tempA = 24.080	tempB = 23.285
+124236	tempA = 24.084	tempB = 23.284
+134231	tempA = 24.071	tempB = 23.286
+144218	tempA = 24.068	tempB = 23.285
+154207	tempA = 24.070	tempB = 23.287
+164193	tempA = 24.070	tempB = 23.291
+174204	tempA = 24.076	tempB = 23.297
+184194	tempA = 24.075	tempB = 23.289
+194194	tempA = 24.082	tempB = 23.293
+204173	tempA = 24.083	tempB = 23.288
+204499	TrapAB autoAlign ON.
+204669	TrapAB autoAlign OFF.
+205442	Center Trap
+214158	tempA = 24.082	tempB = 23.295
+224157	tempA = 24.078	tempB = 23.281
+234164	tempA = 24.071	tempB = 23.298
+244157	tempA = 24.064	tempB = 23.289
+254148	tempA = 24.076	tempB = 23.295
+264158	tempA = 24.065	tempB = 23.287
+274149	tempA = 24.059	tempB = 23.284
+284131	tempA = 24.062	tempB = 23.292
+294114	tempA = 24.063	tempB = 23.289
+304116	tempA = 24.078	tempB = 23.293
+314138	tempA = 24.065	tempB = 23.294
+324118	tempA = 24.077	tempB = 23.293
+334119	tempA = 24.071	tempB = 23.287
+344116	tempA = 24.079	tempB = 23.293
+354099	tempA = 24.063	tempB = 23.287
+364090	tempA = 24.078	tempB = 23.295
+374071	tempA = 24.068	tempB = 23.287
+384075	tempA = 24.079	tempB = 23.302
+394069	tempA = 24.061	tempB = 23.299
+404057	tempA = 24.068	tempB = 23.292
+414061	tempA = 24.060	tempB = 23.300
+424042	tempA = 24.061	tempB = 23.290
+434040	tempA = 24.062	tempB = 23.295
+444031	tempA = 24.070	tempB = 23.294
+454044	tempA = 24.068	tempB = 23.293
+464025	tempA = 24.056	tempB = 23.278
+474016	tempA = 24.068	tempB = 23.289
+484024	tempA = 24.048	tempB = 23.299
+494015	tempA = 24.065	tempB = 23.299
+504014	tempA = 24.054	tempB = 23.297
+514014	tempA = 24.057	tempB = 23.280
+524016	tempA = 24.059	tempB = 23.287
+534026	tempA = 24.064	tempB = 23.285
+544016	tempA = 24.074	tempB = 23.282
+554012	tempA = 24.061	tempB = 23.285
+563996	tempA = 24.064	tempB = 23.300
+573979	tempA = 24.062	tempB = 23.294
+583981	tempA = 24.063	tempB = 23.285
+593972	tempA = 24.058	tempB = 23.298
+603982	tempA = 24.071	tempB = 23.295
+613966	tempA = 24.062	tempB = 23.282
+623968	tempA = 24.056	tempB = 23.278
+633969	tempA = 24.058	tempB = 23.296
+643959	tempA = 24.066	tempB = 23.281
+653956	tempA = 24.062	tempB = 23.279
+663957	tempA = 24.055	tempB = 23.288
+673958	tempA = 24.062	tempB = 23.288
+683947	tempA = 24.054	tempB = 23.273
+693957	tempA = 24.048	tempB = 23.286
+703948	tempA = 24.054	tempB = 23.283
+713947	tempA = 24.058	tempB = 23.274
+723966	tempA = 24.059	tempB = 23.287
+733946	tempA = 24.061	tempB = 23.294
+743945	tempA = 24.055	tempB = 23.284
+753936	tempA = 24.055	tempB = 23.283
+763947	tempA = 24.053	tempB = 23.277
+773932	tempA = 24.043	tempB = 23.269
+783920	tempA = 24.053	tempB = 23.285
+793919	tempA = 24.048	tempB = 23.284
+803919	tempA = 24.040	tempB = 23.272
+813921	tempA = 24.051	tempB = 23.278
+823931	tempA = 24.042	tempB = 23.276
+833923	tempA = 24.050	tempB = 23.281
+843925	tempA = 24.049	tempB = 23.277
+853905	tempA = 24.034	tempB = 23.277
+863886	tempA = 24.034	tempB = 23.280
+873868	tempA = 24.031	tempB = 23.259
+883865	tempA = 24.059	tempB = 23.272
+893864	tempA = 24.038	tempB = 23.276
+903863	tempA = 24.030	tempB = 23.266
+913863	tempA = 24.020	tempB = 23.274
+923853	tempA = 24.036	tempB = 23.270
+933851	tempA = 24.044	tempB = 23.261
+943833	tempA = 24.043	tempB = 23.279
+953833	tempA = 24.024	tempB = 23.274
+963822	tempA = 24.029	tempB = 23.266
+973810	tempA = 24.022	tempB = 23.261
+983807	tempA = 24.033	tempB = 23.257
+993797	tempA = 24.035	tempB = 23.263
+1003797	tempA = 24.043	tempB = 23.251
+1013796	tempA = 24.030	tempB = 23.250
+1023796	tempA = 24.025	tempB = 23.253
+1033786	tempA = 24.028	tempB = 23.264
+1043784	tempA = 24.018	tempB = 23.251
+1053784	tempA = 24.041	tempB = 23.252
+1063765	tempA = 24.037	tempB = 23.268
+1073765	tempA = 24.022	tempB = 23.259
+1083747	tempA = 24.030	tempB = 23.251
+1093736	tempA = 24.022	tempB = 23.255
+1103718	tempA = 24.034	tempB = 23.260
+1113716	tempA = 24.026	tempB = 23.255
+1123698	tempA = 24.019	tempB = 23.269
+1133682	tempA = 24.034	tempB = 23.248
+1143670	tempA = 24.006	tempB = 23.254
+1153657	tempA = 24.008	tempB = 23.252
+1163656	tempA = 24.021	tempB = 23.248
+1173654	tempA = 24.002	tempB = 23.242
+1183643	tempA = 24.022	tempB = 23.238
+1193629	tempA = 24.022	tempB = 23.257
+1203616	tempA = 24.023	tempB = 23.237
+1213604	tempA = 24.014	tempB = 23.253
+1223602	tempA = 24.014	tempB = 23.246
+1233584	tempA = 24.001	tempB = 23.234
+1243583	tempA = 24.009	tempB = 23.232
+1253580	tempA = 24.014	tempB = 23.247
+1263579	tempA = 24.015	tempB = 23.238
+1273567	tempA = 24.010	tempB = 23.239
+1283555	tempA = 24.010	tempB = 23.247
+1293554	tempA = 24.013	tempB = 23.228
+1303544	tempA = 24.014	tempB = 23.236
+1313544	tempA = 23.999	tempB = 23.246
+1323543	tempA = 24.007	tempB = 23.241
+1333542	tempA = 24.019	tempB = 23.234
+1343530	tempA = 24.000	tempB = 23.225
+1353520	tempA = 24.014	tempB = 23.248
+1363501	tempA = 24.010	tempB = 23.234
+1373497	tempA = 24.013	tempB = 23.233
+1383495	tempA = 24.011	tempB = 23.227
+1393494	tempA = 24.019	tempB = 23.244
+1403485	tempA = 24.002	tempB = 23.244
+1413484	tempA = 23.994	tempB = 23.248
+1423483	tempA = 24.003	tempB = 23.229
+1433480	tempA = 24.011	tempB = 23.241
+1443474	tempA = 24.009	tempB = 23.238
+1453457	tempA = 24.016	tempB = 23.244
+1463455	tempA = 24.002	tempB = 23.248
+1473452	tempA = 23.996	tempB = 23.234
+1483442	tempA = 24.011	tempB = 23.242
+1493441	tempA = 24.002	tempB = 23.236
+1503428	tempA = 23.996	tempB = 23.236
+1513416	tempA = 24.005	tempB = 23.232
+1523403	tempA = 24.022	tempB = 23.241
+1533393	tempA = 24.010	tempB = 23.243
+1543381	tempA = 24.003	tempB = 23.246
+1553366	tempA = 23.991	tempB = 23.244
+1563354	tempA = 24.007	tempB = 23.239
+1573353	tempA = 24.003	tempB = 23.240
+1583347	tempA = 24.003	tempB = 23.241
+1593334	tempA = 24.007	tempB = 23.238
+1603332	tempA = 24.003	tempB = 23.240
+1613322	tempA = 24.011	tempB = 23.249
+1623309	tempA = 24.005	tempB = 23.253
+1633308	tempA = 24.010	tempB = 23.239
+1643288	tempA = 24.017	tempB = 23.242
+1653284	tempA = 24.013	tempB = 23.236
+1663274	tempA = 24.007	tempB = 23.244
+1673274	tempA = 24.017	tempB = 23.250
+1683272	tempA = 24.004	tempB = 23.242
+1693253	tempA = 24.014	tempB = 23.243
+1703233	tempA = 23.989	tempB = 23.238
+1713232	tempA = 24.001	tempB = 23.238
+1723233	tempA = 23.996	tempB = 23.234
+1733224	tempA = 24.006	tempB = 23.235
+1743213	tempA = 24.013	tempB = 23.242
+1753203	tempA = 24.016	tempB = 23.233
+1763202	tempA = 23.999	tempB = 23.237
+1773192	tempA = 24.004	tempB = 23.241
+1783178	tempA = 24.003	tempB = 23.232
+1793169	tempA = 23.994	tempB = 23.243
+1803158	tempA = 23.998	tempB = 23.240
+1813149	tempA = 23.998	tempB = 23.234
+1823136	tempA = 23.999	tempB = 23.239
+1833125	tempA = 23.987	tempB = 23.231
+1843105	tempA = 23.991	tempB = 23.234
+1853093	tempA = 23.999	tempB = 23.233
+1863083	tempA = 23.998	tempB = 23.237
+1873071	tempA = 23.984	tempB = 23.230
+1883081	tempA = 23.987	tempB = 23.238
+1888036	manual move motors 
+1893086	tempA = 24.001	tempB = 23.227
+1903081	tempA = 24.003	tempB = 23.230
+1913083	tempA = 24.006	tempB = 23.231
+1923083	tempA = 24.004	tempB = 23.235
+1933084	tempA = 24.016	tempB = 23.231
+1943087	tempA = 24.003	tempB = 23.232
+1953083	tempA = 24.002	tempB = 23.240
+1963069	tempA = 24.010	tempB = 23.228
+1973049	tempA = 24.009	tempB = 23.236
+1983070	tempA = 24.026	tempB = 23.228
+1993071	tempA = 24.010	tempB = 23.234
+2003070	tempA = 24.028	tempB = 23.239
+2013059	tempA = 24.020	tempB = 23.236
+2023041	tempA = 24.027	tempB = 23.237
+2033045	tempA = 24.027	tempB = 23.226
+2043039	tempA = 24.023	tempB = 23.239
+2053029	tempA = 24.030	tempB = 23.235
+2063022	tempA = 24.033	tempB = 23.242
+2068780	manual move motors 
+2072863	motor goTo 2
+2073028	tempA = 24.039	tempB = 23.244
+2077163	motor goTo 1
+2080320	Zero PSDs
+2080536	Zero PSDs
+2080866	Zero PSDs
+2081010	Zero PSDs
+2081163	Zero PSDs
+2081463	motor goTo 1
+2082266	motor goTo 2
+2083028	tempA = 24.037	tempB = 23.239
+2093032	tempA = 24.027	tempB = 23.230
+2103025	tempA = 24.037	tempB = 23.242
+2113067	tempA = 24.024	tempB = 23.243
+2118539	motor goTo 1
+2123063	tempA = 24.021	tempB = 23.235
+2133063	tempA = 24.029	tempB = 23.242
+2143062	tempA = 24.043	tempB = 23.229
+2153048	tempA = 24.035	tempB = 23.237
+2163047	tempA = 24.032	tempB = 23.246
+2171582	manual move motors 
+2173030	tempA = 24.031	tempB = 23.242
+2176490	motor goTo 1
+2177573	motor goTo 3
+2183039	tempA = 24.027	tempB = 23.241
+2185305	manual move motors 
+2193049	tempA = 24.026	tempB = 23.239
+2203031	tempA = 24.030	tempB = 23.255
+2213039	tempA = 24.039	tempB = 23.252
+2223040	tempA = 24.035	tempB = 23.254
+2233051	tempA = 24.027	tempB = 23.247
+2243052	tempA = 24.023	tempB = 23.247
+2253040	tempA = 24.040	tempB = 23.245
+2263029	tempA = 24.043	tempB = 23.243
+2271728	TrapA autoAlign ON.
+2273037	tempA = 24.038	tempB = 23.259
+2274015	manual move motors 
+2278499	Center Trap
+2278777	Center Trap
+2278932	Center Trap
+2281929	motor goTo 1
+2283042	tempA = 24.044	tempB = 23.252
+2293046	tempA = 24.037	tempB = 23.245
+2303027	tempA = 24.044	tempB = 23.252
+2308698	TrapAB autoAlign ON.
+2308831	TrapAB autoAlign OFF.
+2313008	tempA = 24.043	tempB = 23.254
+2315010	manual move motors 
+2318570	Center Trap
+2318714	Center Trap
+2319949	Center Trap
+2321031	manual move motors 
+2323004	tempA = 24.039	tempB = 23.257
+2333011	tempA = 24.044	tempB = 23.251
+2333608	TrapA autoAlign ON.
+2334691	Center Trap
+2335376	Zero Forces
+2335525	Zero Forces
+2343015	tempA = 24.040	tempB = 23.249
+2349380	Center Trap
+2349844	Zero Forces
+2353008	tempA = 24.046	tempB = 23.251
+2354893	Center Trap
+2355387	Zero Forces
+2362219	Zero Forces
+2363001	tempA = 24.040	tempB = 23.251
+2372779	Zero Forces
+2372985	tempA = 24.040	tempB = 23.255
+2376706	Zero Forces
+2380272	Zero Forces
+2382978	tempA = 24.044	tempB = 23.253
+2388044	Zero Forces
+2388203	Zero Forces
+2392961	tempA = 24.035	tempB = 23.264
+2400484	Zero Forces
+2402970	tempA = 24.030	tempB = 23.264
+2407308	Zero Forces
+2407473	Zero Forces
+2412047	Zero Forces
+2412985	tempA = 24.031	tempB = 23.259
+2415108	Zero Forces
+2422974	tempA = 24.048	tempB = 23.255
+2432957	tempA = 24.039	tempB = 23.251
+2434214	Zero Forces
+2438962	Zero Forces
+2442955	tempA = 24.042	tempB = 23.258
+2443191	Zero Forces
+2452993	tempA = 24.040	tempB = 23.256
+2454117	Zero Forces
+2462999	tempA = 24.042	tempB = 23.260
+2473010	tempA = 24.035	tempB = 23.258
+2483020	tempA = 24.040	tempB = 23.256
+2486234	Zero Forces
+2493007	tempA = 24.030	tempB = 23.264
+2503006	tempA = 24.032	tempB = 23.257
+2513001	tempA = 24.033	tempB = 23.268
+2522988	tempA = 24.036	tempB = 23.259
+2532970	tempA = 24.029	tempB = 23.257
+2542981	tempA = 24.035	tempB = 23.267
+2547049	TrapAB autoAlign ON.
+2547286	TrapAB autoAlign OFF.
+2552966	tempA = 24.039	tempB = 23.254
+2562975	tempA = 24.032	tempB = 23.262
+2572965	tempA = 24.037	tempB = 23.267
+2582964	tempA = 24.037	tempB = 23.259
+2592948	tempA = 24.032	tempB = 23.255
+2597676	manual move motors 
+2602945	tempA = 24.026	tempB = 23.262
+2612936	tempA = 24.034	tempB = 23.261
+2619802	TrapA autoAlign ON.
+2620936	Center Trap
+2621338	Zero Forces
+2621668	Zero Forces
+2622955	tempA = 24.038	tempB = 23.256
+2628609	Zero Forces
+2632958	tempA = 24.035	tempB = 23.259
+2642947	tempA = 24.045	tempB = 23.263
+2648109	Start P1 pulling protocol 
+2650829	   minForce-limit
+2652960	tempA = 24.042	tempB = 23.272
+2653302	   maxForce-limit
+2655711	   minForce-limit
+Stop All Protocols, go to manual mode
+2657837	TrapA autoAlign ON.
+2662968	tempA = 24.026	tempB = 23.257
+2667430	Zero Forces
+2667867	Zero Forces
+2672950	tempA = 24.031	tempB = 23.267
+2682952	tempA = 24.030	tempB = 23.263
+2692939	tempA = 24.049	tempB = 23.269
+2695122	Start P1 pulling protocol 
+2695246	   maxForce-limit
+2697709	   minForce-limit
+2700234	   maxForce-limit
+2702799	   minForce-limit
+2702923	tempA = 24.031	tempB = 23.264
+2705323	   maxForce-limit
+2707892	   minForce-limit
+2710304	   maxForce-limit
+2712905	tempA = 24.021	tempB = 23.269
+2712926	   minForce-limit
+2714740	Stop All Protocols, go to manual mode
+2716720	TrapA autoAlign ON.
+2722892	tempA = 24.039	tempB = 23.271
+2732895	tempA = 24.028	tempB = 23.263
+2742883	tempA = 24.045	tempB = 23.274
+2752901	tempA = 24.043	tempB = 23.267
+2762904	tempA = 24.030	tempB = 23.274
+2772894	tempA = 24.038	tempB = 23.271
+2782895	tempA = 24.039	tempB = 23.273
+2792906	tempA = 24.042	tempB = 23.272
+2802896	tempA = 24.028	tempB = 23.273
+2812898	tempA = 24.034	tempB = 23.267
+2822880	tempA = 24.035	tempB = 23.275
+2832880	tempA = 24.036	tempB = 23.262
+2842892	tempA = 24.032	tempB = 23.272
+2852897	tempA = 24.050	tempB = 23.271
+2862899	tempA = 24.027	tempB = 23.269
+2872910	tempA = 24.028	tempB = 23.275
+2882917	tempA = 24.021	tempB = 23.267
+2892902	tempA = 24.034	tempB = 23.271
+2902902	tempA = 24.034	tempB = 23.279
+2912890	tempA = 24.035	tempB = 23.268
+2922901	tempA = 24.026	tempB = 23.268
+2932901	tempA = 24.039	tempB = 23.275
+2942903	tempA = 24.037	tempB = 23.270
+2952906	tempA = 24.045	tempB = 23.268
+2962909	tempA = 24.038	tempB = 23.280
+2972909	tempA = 24.038	tempB = 23.273
+2982890	tempA = 24.044	tempB = 23.275
+2992890	tempA = 24.039	tempB = 23.289
+3002891	tempA = 24.045	tempB = 23.277
+3012895	tempA = 24.037	tempB = 23.276
+3022915	tempA = 24.044	tempB = 23.277
+3032897	tempA = 24.037	tempB = 23.274
+3042877	tempA = 24.040	tempB = 23.268
+3052862	tempA = 24.047	tempB = 23.277
+3062861	tempA = 24.040	tempB = 23.273
+3072861	tempA = 24.035	tempB = 23.272
+3082850	tempA = 24.036	tempB = 23.276
+3092850	tempA = 24.042	tempB = 23.288
+3102853	tempA = 24.037	tempB = 23.273
+3112848	tempA = 24.034	tempB = 23.278
+3122837	tempA = 24.040	tempB = 23.282
+3132868	tempA = 24.040	tempB = 23.279
+3142871	tempA = 24.037	tempB = 23.278
+3152867	tempA = 24.046	tempB = 23.265
+3162868	tempA = 24.048	tempB = 23.276
+3172858	tempA = 24.048	tempB = 23.282
+3182850	tempA = 24.048	tempB = 23.279
+3192843	tempA = 24.036	tempB = 23.275
+3202844	tempA = 24.053	tempB = 23.277
+3212854	tempA = 24.038	tempB = 23.271
+3222854	tempA = 24.045	tempB = 23.279
+3232843	tempA = 24.041	tempB = 23.291
+3242855	tempA = 24.061	tempB = 23.276
+3252846	tempA = 24.047	tempB = 23.281
+3262844	tempA = 24.038	tempB = 23.291
+3272846	tempA = 24.060	tempB = 23.285
+3282828	tempA = 24.048	tempB = 23.273
+3292826	tempA = 24.052	tempB = 23.291
+3302814	tempA = 24.050	tempB = 23.281
+3312798	tempA = 24.059	tempB = 23.284
+3315002	Start P1 pulling protocol 
+3315157	   maxForce-limit
+3317598	   minForce-limit
+3320229	   maxForce-limit
+3322756	   minForce-limit
+3322797	tempA = 24.046	tempB = 23.279
+3325320	   maxForce-limit
+3327763	   minForce-limit
+3330247	   maxForce-limit
+3332807	tempA = 24.044	tempB = 23.283
+3332901	   minForce-limit
+3335494	   maxForce-limit
+3338081	   minForce-limit
+3340655	   maxForce-limit
+3342793	tempA = 24.051	tempB = 23.282
+3343594	   minForce-limit
+3346305	   maxForce-limit
+3348996	   minForce-limit
+3351647	   maxForce-limit
+3352796	tempA = 24.052	tempB = 23.285
+3354389	   minForce-limit
+3356996	   maxForce-limit
+3359708	   minForce-limit
+3362318	   maxForce-limit
+3362795	tempA = 24.057	tempB = 23.295
+3364999	   minForce-limit
+3367793	   maxForce-limit
+3370523	   minForce-limit
+3372779	tempA = 24.059	tempB = 23.283
+3373276	   maxForce-limit
+3376005	   minForce-limit
+3379290	   maxForce-limit
+3382122	   minForce-limit
+3382770	tempA = 24.064	tempB = 23.288
+3384787	   maxForce-limit
+3387520	   minForce-limit
+3390545	   maxForce-limit
+3392772	tempA = 24.042	tempB = 23.289
+3393280	   minForce-limit
+3396406	   maxForce-limit
+3399202	   minForce-limit
+3401977	   maxForce-limit
+3402794	tempA = 24.052	tempB = 23.277
+3404790	   minForce-limit
+3407619	   maxForce-limit
+3410433	   minForce-limit
+3412793	tempA = 24.054	tempB = 23.294
+3413208	   maxForce-limit
+3416350	   minForce-limit
+3419029	   maxForce-limit
+3421843	   minForce-limit
+3422794	tempA = 24.060	tempB = 23.289
+3424712	   maxForce-limit
+3427613	   minForce-limit
+3430470	   maxForce-limit
+3432801	tempA = 24.059	tempB = 23.287
+3433640	   minForce-limit
+3436437	   maxForce-limit
+3439355	   minForce-limit
+3442179	   maxForce-limit
+3442801	tempA = 24.065	tempB = 23.282
+3444964	   minForce-limit
+3447864	   maxForce-limit
+3450773	   minForce-limit
+3452781	tempA = 24.062	tempB = 23.292
+3453640	   maxForce-limit
+3456550	   minForce-limit
+3459362	   maxForce-limit
+3462767	tempA = 24.047	tempB = 23.299
+3462840	   minForce-limit
+3465705	   maxForce-limit
+3468946	   minForce-limit
+3471964	   maxForce-limit
+3472760	tempA = 24.056	tempB = 23.291
+3474892	   minForce-limit
+3477789	   maxForce-limit
+3480695	   minForce-limit
+3482749	tempA = 24.069	tempB = 23.285
+3484248	   maxForce-limit
+3487177	   minForce-limit
+3490114	   maxForce-limit
+3492750	tempA = 24.062	tempB = 23.297
+3493195	   minForce-limit
+3496327	   maxForce-limit
+3500203	   minForce-limit
+3502741	tempA = 24.062	tempB = 23.298
+3503413	   maxForce-limit
+3506425	   minForce-limit
+3509406	   maxForce-limit
+3512456	   minForce-limit
+3512735	tempA = 24.065	tempB = 23.296
+3515500	   maxForce-limit
+3518445	   minForce-limit
+3521456	   maxForce-limit
+3522726	tempA = 24.071	tempB = 23.294
+3524690	   minForce-limit
+3527671	   maxForce-limit
+3530721	   minForce-limit
+3532729	tempA = 24.061	tempB = 23.283
+3533765	   maxForce-limit
+3536743	   minForce-limit
+3539743	   maxForce-limit
+3542726	tempA = 24.056	tempB = 23.292
+3542892	   minForce-limit
+3546649	   maxForce-limit
+3549608	   minForce-limit
+3552536	   maxForce-limit
+3552722	tempA = 24.056	tempB = 23.290
+3555603	   minForce-limit
+3558757	   maxForce-limit
+3562611	   minForce-limit
+3562704	tempA = 24.063	tempB = 23.303
+3565518	   maxForce-limit
+3568498	   minForce-limit
+3571457	   maxForce-limit
+3572708	tempA = 24.067	tempB = 23.293
+3574469	   minForce-limit
+3577153	   maxForce-limit
+3579698	   minForce-limit
+3582202	   maxForce-limit
+3582710	tempA = 24.070	tempB = 23.296
+3584905	   minForce-limit
+3587399	   maxForce-limit
+3589957	   minForce-limit
+3592514	   maxForce-limit
+3592701	tempA = 24.057	tempB = 23.309
+3595082	   minForce-limit
+3597639	   maxForce-limit
+3598136	Stop All Protocols, go to manual mode
+3599579	TrapA autoAlign ON.
+3602689	tempA = 24.052	tempB = 23.299
+3612689	tempA = 24.045	tempB = 23.291
+3622688	tempA = 24.063	tempB = 23.295
+3632671	tempA = 24.067	tempB = 23.310
+3642691	tempA = 24.054	tempB = 23.306
+3652677	tempA = 24.063	tempB = 23.295
+3662671	tempA = 24.058	tempB = 23.302
+3672658	tempA = 24.063	tempB = 23.295
+3682660	tempA = 24.068	tempB = 23.292
+3692660	tempA = 24.056	tempB = 23.300
+3702653	tempA = 24.051	tempB = 23.298
+3712639	tempA = 24.069	tempB = 23.288
+3714731	TrapAB autoAlign ON.
+3714936	TrapAB autoAlign OFF.
+3715873	Center Trap
+3717646	manual move motors 
+3722627	tempA = 24.056	tempB = 23.300
+3722853	TrapA autoAlign ON.
+3725016	Center Trap
+3732631	tempA = 24.076	tempB = 23.292
+3736875	Zero Forces
+3742622	tempA = 24.069	tempB = 23.289
+3747053	Center Trap
+3747620	Zero Forces
+3752626	tempA = 24.061	tempB = 23.305
+3758058	Zero Forces
+3762613	tempA = 24.075	tempB = 23.309
+3769406	Zero Forces
+3772614	tempA = 24.063	tempB = 23.297
+3782604	tempA = 24.069	tempB = 23.291
+3792622	tempA = 24.058	tempB = 23.301
+3802632	tempA = 24.064	tempB = 23.306
+3812652	tempA = 24.072	tempB = 23.295
+3822649	tempA = 24.067	tempB = 23.301
+3832633	tempA = 24.069	tempB = 23.300
+3835098	Zero Forces
+3842617	tempA = 24.076	tempB = 23.302
+3852286	Zero Forces
+3852626	tempA = 24.068	tempB = 23.301
+3862637	tempA = 24.067	tempB = 23.315
+3872640	tempA = 24.078	tempB = 23.305
+3882636	tempA = 24.074	tempB = 23.315
+3892624	tempA = 24.067	tempB = 23.297
+3902640	tempA = 24.070	tempB = 23.293
+3912638	tempA = 24.072	tempB = 23.314
+3922639	tempA = 24.069	tempB = 23.313
+3932626	tempA = 24.056	tempB = 23.317
+3942607	tempA = 24.067	tempB = 23.313
+3952601	tempA = 24.066	tempB = 23.307
+3958112	Zero Forces
+3962610	tempA = 24.069	tempB = 23.311
+3972596	tempA = 24.072	tempB = 23.310
+3974198	End Write

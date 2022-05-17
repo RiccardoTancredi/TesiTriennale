@@ -1,14 +1,17 @@
+from calendar import different_locale
 import os.path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 class Txt_hop:
-    def __init__(self, dir_name, number, first_time_molecule=False) -> None:
+    def __init__(self, dir_name, number, different_name=None, first_time_molecule=False) -> None:
         self.dir_name = dir_name
         self.number = str(number)
         self.name = self.dir_name + '/' + self.number + 'hop'
         self.first_time_molecule = first_time_molecule # if the file is open for the first time use method _removeBegin
+        if different_name:
+            self.name = self.dir_name + '/' + self.number + different_name
 
     def _removeBegin(self):
         a_file = open(self.name+'A.txt', "r")
@@ -67,6 +70,7 @@ class Txt_hop:
                         with open(os.path.join(self.dir_name, self.number+'_'+str(i+1)+'.txt'),'w') as outfile:
                             df2.to_string(outfile, index=False)
         else:
+            self.name = self.dir_name + '/' + self.number + 'hop' # this to save data in a better looking txt name
             data = []
             data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 17), (17, 28), (28, 37), (37, -1)]))
             self.dataframe = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets
