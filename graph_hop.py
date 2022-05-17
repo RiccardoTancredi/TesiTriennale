@@ -7,7 +7,8 @@ from matplotlib.gridspec import GridSpec
 # from sklearn.linear_model import LinearRegression
 # from scipy.odr import *
 from scipy.optimize import leastsq, curve_fit
-from sklearn.model_selection import fit_grid_point
+from pynverse import inversefunc
+from scipy.integrate import quad
 
 class Graph_hop:
     def __init__(self, dir_name, number, number_file) -> None:
@@ -153,8 +154,9 @@ class Graph_hop:
         ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
+        states_hhm = self.hmm(fitting)
+        times = self.hmm_analysis(fitting)
         if Markov:
-            states_hhm = self.hmm(fitting)
             ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], color = 'm', label='HMM')
         ax0.set_ylabel('$f_y\:[pN]$')
         ax0.set_xlabel('$t\:[s]$')
@@ -175,6 +177,7 @@ class Graph_hop:
         ax1.legend()
         plt.subplots_adjust(wspace=0.03,)
         plt.show()
+        return times
 
     def _linear(self, x, m, q):
         # params is a vector of the parameters:
@@ -225,6 +228,28 @@ class Graph_hop:
         return (x_NU, sigma_x_nU), (f_c, sigma_f_c), (DeltaG_NU, sigma_DeltaG_NU)
         
 
+    def x_d(self, f):
+        d = 2 #nm
+        return d*(1./np.tanh((f*d)/self.KBT) - self.KBT/(f*d)) # nm
+
+    def f_WLC(self, x):
+        P = 1.35 #nm -> persistence length
+        d_aa = 0.58 #nm -> distance between consecutive nucleotides
+        N = 46 # number of nucleotides
+        L = N*d_aa # nm
+        return self.KBT/P * (1./(4*(1-x/L)**3) - 1/4 + x/L) # pN
+
+    def G0(self, f_c):
+        # f_c = coexistence force
+        x_fc = inversefunc(self.f_WLC, y_values=f_c) # extension at f_c
+        # calculate integral using basic scipy method
+        G0_delta = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0] # check if these integrals are correct
+        sigma_G0_delta = None
+        print(f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}")
+        return G0_delta, sigma_G0_delta
+
+
+
         # Hidden Markov Model
     def hmm(self, fitting):
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
@@ -242,3 +267,16 @@ class Graph_hop:
     def _gaussian(self, x, par):
         mu, sigma = par
         return np.exp(- (x - mu)**2.0 / (2.0 * sigma**2.0) )/np.sqrt(2*np.pi*sigma)
+
+
+    def hmm_analysis(self, fitting):
+        (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
+        states = self.hmm(fitting)
+        native = len([i for i in states if i == mu1]) # up force
+        unfolded = len([j for j in states if j == mu2]) # or faster: len(states) - native
+        print(f"La molecola sta {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
+        return native, unfolded
+
+    def residence_time(self, times, forces):
+        # grafico forze_medie vs tempi di esistenza stato folded e unfolded
+        pass
