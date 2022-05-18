@@ -10,6 +10,8 @@ from scipy.optimize import leastsq, curve_fit
 from pynverse import inversefunc
 from scipy.integrate import quad
 
+from inverse import x_WLC_f
+
 class Graph_hop:
     def __init__(self, dir_name, number, number_file) -> None:
         self.dir_name = dir_name
@@ -17,6 +19,11 @@ class Graph_hop:
         self.number_file = str(number_file)
         self.name = self.dir_name + '/' + self.number + '_' + self.number_file 
         self.KBT = 4.11 # pN*nm
+        self.d = 2 #nm
+        self.P = 1.35 #nm -> persistence length
+        d_aa = 0.58 #nm -> distance between consecutive nucleotides
+        N = 46 # number of nucleotides
+        self.L = N*d_aa # nm
         
     def do_graph(self, time_range=None):
         data = []
@@ -227,21 +234,15 @@ class Graph_hop:
         print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}, con sigma = {sigma_DeltaG_NU}")
         return (x_NU, sigma_x_nU), (f_c, sigma_f_c), (DeltaG_NU, sigma_DeltaG_NU)
         
-
     def x_d(self, f):
-        d = 2 #nm
-        return d*(1./np.tanh((f*d)/self.KBT) - self.KBT/(f*d)) # nm
+        return self.d*(1./np.tanh((f*self.d)/self.KBT) - self.KBT/(f*self.d)) # nm
 
     def f_WLC(self, x):
-        P = 1.35 #nm -> persistence length
-        d_aa = 0.58 #nm -> distance between consecutive nucleotides
-        N = 46 # number of nucleotides
-        L = N*d_aa # nm
-        return self.KBT/P * (1./(4*(1-x/L)**3) - 1/4 + x/L) # pN
+        return self.KBT/self.P * (1./(4*(1-x/self.L)**2) - 1/4 + x/self.L) # pN
 
     def G0(self, f_c):
         # f_c = coexistence force
-        x_fc = inversefunc(self.f_WLC, y_values=f_c) # extension at f_c
+        x_fc = self.x_WLC_f(f_c, ) # extension at f_c, by inverting the formula for the force in the WLC model (see below)
         # calculate integral using basic scipy method
         G0_delta = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0] # check if these integrals are correct
         sigma_G0_delta = None
@@ -272,6 +273,7 @@ class Graph_hop:
     def hmm_analysis(self, fitting):
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
         states = self.hmm(fitting)
+        # ToDo: select data equals to every dataset
         native = len([i for i in states if i == mu1]) # up force
         unfolded = len([j for j in states if j == mu2]) # or faster: len(states) - native
         print(f"La molecola sta {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
@@ -280,3 +282,53 @@ class Graph_hop:
     def residence_time(self, times, forces):
         # grafico forze_medie vs tempi di esistenza stato folded e unfolded
         pass
+
+
+
+
+    # Inverse function of f(x) from WLC model
+    def x_WLC_f(self, f,):
+        fnorm = ((4*self.P)/self.KBT)*f
+        a2 = (1/4)*(-9-fnorm)
+        a1 = (3/2)+(1/2)*fnorm
+        a0 = -fnorm/4
+        
+        R = (9*a1*a2-27*a0-2*a2**3)/54.
+        Q = (3*a1-a2**2)/9.
+        
+        D = Q**3+R**2
+        
+        if D > 0:
+            # In this case, there is only one real root, given by "out" below
+            S = np.cbrt(R+np.sqrt(D))
+            T = np.cbrt(R-np.sqrt(D))
+            out = (-1/3)*a2+S+T
+        elif D < 0:
+            # In this case there 3 real distinct solutions, given by out1,
+            # out2, out3 below. The one that interests us is that in the
+            # inerval [0,1]. It is seen ("empirically") that is always the
+            # second one in the list below [there is perhaps more to search here]
+            
+            theta = np.arccos(R/np.sqrt(-Q**3))
+            # out1 = 2*np.sqrt(-Q)*np.cos(theta/3)-(1/3)*a2;
+            out2 = 2*np.sqrt(-Q)*np.cos((theta+2*np.pi)/3)-(1/3)*a2
+            # out3 = 2*np.sqrt(-Q)*np.cos((theta+4*np.pi)/3)-(1/3)*a2
+            
+            # We implement the following check just to be sure out2 is the good root 
+            # (in case this "empirical" truth turns out to stop working) 
+            try:
+                out2 < 0 or out2 > 1
+            except:    
+                print('The default root doesn"t seem the be good one - you may want to check if the others lie in the interval [0,1]')
+            else:
+                out = out2
+        else:
+            # In theory we always go from D>0 to D<0 by passing to a D=0
+            # boundary, where we have two real roots (and where the formulas
+            # above change again slightly). In practice, however, due to round-off errors,
+            # it seems we never hit this boundary but always pass "through" it 
+            # This D=0 scenario could still be implemented if needed, though.
+            print('#ToDo')
+
+        z = out
+        return z*self.L
