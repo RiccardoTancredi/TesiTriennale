@@ -162,7 +162,6 @@ class Graph_hop:
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
         states_hhm = self.hmm(fitting)
-        times = self.hmm_analysis(fitting)
         if Markov:
             ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], color = 'm', label='HMM')
         ax0.set_ylabel('$f_y\:[pN]$')
@@ -184,7 +183,6 @@ class Graph_hop:
         ax1.legend()
         plt.subplots_adjust(wspace=0.03,)
         plt.show()
-        return times
 
     def _linear(self, x, m, q):
         # params is a vector of the parameters:
@@ -273,18 +271,23 @@ class Graph_hop:
     def hmm_analysis(self, fitting):
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
         states = self.hmm(fitting)
-        # ToDo: select data equals to every dataset
-        native = len([i for i in states if i == mu1]) # up force
-        unfolded = len([j for j in states if j == mu2]) # or faster: len(states) - native
-        print(f"La molecola sta {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
+        # Time selection data equals to every dataset
+        t_min = 0
+        t_max = 12000
+        native = len([i for i in states[t_min:t_max] if i == mu1]) # up force
+        unfolded = len([j for j in states[t_min:t_max] if j == mu2]) # or faster: len(states[t_min:t_max]) - native
+        print(f"La molecola si trova {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
         return native, unfolded
 
-    def residence_time(self, times, forces):
-        # grafico forze_medie vs tempi di esistenza stato folded e unfolded
-        pass
-
-
-
+    def residence_time(self, native_time, unfolded_time, forces):
+        # grafico forze_medie vs tempi di esistenza stato folded e unfolded      
+        plt.scatter(forces, native_time, c='r', label='$t_N$')
+        plt.scatter(forces, unfolded_time, c='b', label='$t_U$')
+        plt.ylabel('$t \: [s]$')
+        plt.xlabel('$\overline{f} \:[pN]$')
+        plt.title('Residence Time')
+        plt.legend()
+        plt.show()
 
     # Inverse function of f(x) from WLC model
     def x_WLC_f(self, f,):
