@@ -185,14 +185,11 @@ class Graph_hop:
         plt.show()
 
     def _linear(self, x, m, q):
-        # params is a vector of the parameters:
-        # params = [f_F, sigma_F, w_F, f_U, sigma_U, w_U]
         res =   m*x+q
         return res
-        # return B[2]/np.sqrt(2*np.pi*B[1])*np.exp(((x-B[0])/(2*B[1]))**2) + B[5]/np.sqrt(2*np.pi*B[4])*np.exp(((x-B[3])/(2*B[4]))**2)
-
+        
     def _linear_fit(self, x, y, params, sigma_y=None):
-        linear = np.vectorize(self._linear,  excluded=['params'])
+        linear = np.vectorize(self._linear,  excluded=['m', 'q'])
         popt, pcov = curve_fit(linear, x, y, params, sigma_y, True)
         sigmas = np.sqrt(np.diag(pcov))
         return popt, sigmas
@@ -279,15 +276,28 @@ class Graph_hop:
         print(f"La molecola si trova {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
         return native, unfolded
 
-    def residence_time(self, native_time, unfolded_time, forces):
-        # grafico forze_medie vs tempi di esistenza stato folded e unfolded      
-        plt.scatter(forces, native_time, c='r', label='$t_N$')
-        plt.scatter(forces, unfolded_time, c='b', label='$t_U$')
-        plt.ylabel('$t \: [s]$')
+    def residence_time(self, native_time, unfolded_time, forces, par1=None, par2=None):
+        # grafico forze_medie vs tempi di esistenza stato folded e unfolded    
+        linear = np.vectorize(self._linear,  excluded=['m', 'q'])
+        guess1 = [-0.1, 10] if not par1 else par1
+        guess2 = [0.1, 5] if not par2 else par2
+        (a_1, b_1), (sigma_a_1, sigma_b_1) = self._linear_fit(forces, np.log(native_time), guess1) # , sigma_y
+        (a_2, b_2), (sigma_a_2, sigma_b_2) = self._linear_fit(forces, np.log(unfolded_time), guess2) # , sigma_y
+        x = np.linspace(min(forces), max(forces), 1000)
+        y_pred1 = linear(x=x, m=a_1, q=b_1)
+        y_pred2 = linear(x=x, m=a_2, q=b_2)
+        plt.scatter(forces, np.log(native_time), c='r', label='$t_N$')
+        plt.plot(x, y_pred1, c='r', label='Fit')
+        plt.scatter(forces, np.log(unfolded_time), c='b', label='$t_U$')
+        plt.plot(x, y_pred2, c='b', label='Fit')
+        plt.ylabel('$log(t) \: [s]$')
         plt.xlabel('$\overline{f} \:[pN]$')
-        plt.title('Residence Time')
+        plt.title('Log Residence Time')
         plt.legend()
         plt.show()
+        print("Quelle resitituite sono i parametri del fit lineare: m = a, q = log(b), con t(f) = b*e^(a*f)")
+        return (a_1, b_1), (sigma_a_1, sigma_b_1), (a_2, b_2), (sigma_a_2, sigma_b_2)
+       
 
     # Inverse function of f(x) from WLC model
     def x_WLC_f(self, f,):
