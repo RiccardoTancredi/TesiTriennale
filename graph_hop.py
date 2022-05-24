@@ -374,28 +374,26 @@ class Graph_hop:
         y_pred1 = linear(x=x, m=m_1, q=q_1)
         y_pred2 = linear(x=x, m=m_2, q=q_2)
         f_c = (q_2*m_1-q_1*m_2)/(m_1-m_2)
-        sigma_f_c = np.sqrt(((m_2*sigma_q_1)/(m_2-m_1))**2+((m_1*sigma_q_2)/(m_2-m_1))**2+((m_1*(q_2-q_1))/((m_2-m_1)**2))**2+((m_2*(q_1-q_2))/((m_2-m_1)**2))**2)
+        sigma_f_c = np.sqrt(((m_2*sigma_q_1)/(m_2-m_1))**2+((m_1*sigma_q_2)/(m_2-m_1))**2+((m_1*sigma_m_2*(q_2-q_1))/((m_2-m_1)**2))**2+((m_2*sigma_m_1*(q_1-q_2))/((m_2-m_1)**2))**2)
         t_c = np.exp((q_2-q_1)/(m_1-m_2))
         sigma_t_c = t_c*np.sqrt((sigma_q_2/(m_1-m_2))**2+(sigma_q_1/(m_1-m_2))**2+((q_2-q_1)*sigma_m_1/((m_2-m_1)**2))**2+((sigma_m_2*(q_1-q_2))/((m_2-m_1)**2))**2)
-        plt.errorbar(forces, np.log(native_time), c='r', label='$t_N$')
+        plt.errorbar(np.log(native_time), forces, sigma_forces, fmt = 'o', c='r', label='$t_N$')
         plt.plot(x, y_pred1, c='r', label='Fit')
-        plt.errorbar(forces, np.log(unfolded_time), c='b', label='$t_U$')
+        plt.errorbar(np.log(unfolded_time), forces, sigma_forces, fmt = 'o', c='b', label='$t_U$')
         plt.plot(x, y_pred2, c='b', label='Fit')
         x_oriz = np.linspace(min(np.log(native_time+unfolded_time)), np.log(t_c), 100)
-        y_vert = np.linspace(min(forces), f_c, 100)
-        plt.plot(x_oriz, [f_c]*y_vert.shape[0], color = 'g', linestyle = 'dashed', label = '$(t,\: f_c)$')
-        plt.plot([np.log(t_c)]*x_oriz.shape[0], y_vert, color = 'g', linestyle = 'dashed')
+        y_vert = np.linspace(min(y_pred2.tolist()+y_pred1.tolist()), f_c, 100)
+        plt.plot(x_oriz, [f_c]*x_oriz.shape[0], color = 'g', linestyle = 'dashed', label = '$(t,\: f_c)$')
+        plt.plot([np.log(t_c)]*y_vert.shape[0], y_vert, color = 'g', linestyle = 'dashed')
         plt.xlabel('$log(t) \: [s]$')
         plt.ylabel('$\overline{f} \:[pN]$')
         plt.title('Log Residence Time')
         plt.legend()
         plt.show()
         beta = (1./m_2-1./m_1)/self.x_NU
-        # TODO:
         sigma_beta = None # np.sqrt(sigma_m_1**2+sigma_m_2**2+(beta*self.sigma_x_NU)**2)/self.x_NU
         DeltaGNU = (-q_1/m_1+q_2/m_2)/beta
-        # TODO:
-        sigma_DeltaGNU = None # np.sqrt(sigma_q_1**2+sigma_q_2**2+(DeltaGNU*sigma_beta)**2)/beta
+        sigma_DeltaGNU = np.sqrt((m_1*self.x_NU*sigma_q_2/(m_1-m_2))**2+(m_2*sigma_q_1*self.x_NU/(m_1-m_2))**2+(m_2*(q_1-q_2)*self.x_NU*sigma_m_1/(m_1-m_2)**2)**2+(m_1*self.x_NU*sigma_m_2*(q_2-q_1)/(m_1-m_2)**2)**2+(DeltaGNU*self.sigma_x_NU/self.x_NU)**2)
         print(f"Stimiamo i parametri del fit lineare: m1 = {m_1}, con incertezza = {sigma_m_1}, \n q1 = {q_1}, con incertezza = {sigma_q_1}")
         print(f"Stimiamo i parametri del fit lineare: m2 = {m_2}, con incertezza = {sigma_m_2}, \n q2 = {q_2}, con incertezza = {sigma_q_2}")
         print(f"La forza di coesistenza qui vale: fc = {f_c}, con incertezza = {sigma_f_c}")
