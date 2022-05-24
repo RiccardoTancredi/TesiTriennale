@@ -234,12 +234,20 @@ class Graph_hop:
     def f_WLC(self, x):
         return self.KBT/self.P * (1./(4*(1-x/self.L)**2) - 1/4 + x/self.L) # pN
 
-    def G0(self, f_c):
+    def G0(self, fc):
         # f_c = coexistence force
+        f_c, sigma_f_c = fc
         x_fc = self.x_WLC_f(f_c) # extension at f_c, by inverting the formula for the force in the WLC model (see below)
         # calculate integral using basic scipy method
         G0_delta = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0] # check if these integrals are correct
-        sigma_G0_delta = None
+        # calcolo incertezza
+        f_c += sigma_f_c
+        x_fc = self.x_WLC_f(f_c)
+        G0_piu_sigma = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
+        f_c -= 2*sigma_f_c
+        x_fc = self.x_WLC_f(f_c)
+        G0_meno_sigma = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
+        sigma_G0_delta = (G0_piu_sigma-G0_meno_sigma)/np.sqrt(24) # distribuzione triangolare
         print(f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}")
         return G0_delta, sigma_G0_delta
 
@@ -364,7 +372,7 @@ class Graph_hop:
 
 
     def linear_inverse(self, native_time, unfolded_time, forces, sigma_forces, par1=None, par2=None):
-        # grafico forze_medie vs tempi di esistenza stato folded e unfolded    
+        # grafico tempi vs forze_medie di esistenza stato folded e unfolded    
         linear = np.vectorize(self._linear,  excluded=['m', 'q'])
         guess1 = [-10, 100] if not par1 else par1
         guess2 = [10, -50] if not par2 else par2
@@ -391,7 +399,6 @@ class Graph_hop:
         plt.legend()
         plt.show()
         beta = (1./m_2-1./m_1)/self.x_NU
-        sigma_beta = None # np.sqrt(sigma_m_1**2+sigma_m_2**2+(beta*self.sigma_x_NU)**2)/self.x_NU
         DeltaGNU = (-q_1/m_1+q_2/m_2)/beta
         sigma_DeltaGNU = np.sqrt((m_1*self.x_NU*sigma_q_2/(m_1-m_2))**2+(m_2*sigma_q_1*self.x_NU/(m_1-m_2))**2+(m_2*(q_1-q_2)*self.x_NU*sigma_m_1/(m_1-m_2)**2)**2+(m_1*self.x_NU*sigma_m_2*(q_2-q_1)/(m_1-m_2)**2)**2+(DeltaGNU*self.sigma_x_NU/self.x_NU)**2)
         print(f"Stimiamo i parametri del fit lineare: m1 = {m_1}, con incertezza = {sigma_m_1}, \n q1 = {q_1}, con incertezza = {sigma_q_1}")
