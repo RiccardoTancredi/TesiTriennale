@@ -72,7 +72,7 @@ class Txt_hop:
         else:
             self.name = self.dir_name + '/' + self.number + 'hop' # this to save data in a better looking txt name
             data = []
-            data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 17), (17, 28), (28, 37), (37, -1)]))
+            data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 18), (18, 27), (27, 36), (36, -1)]))
             self.dataframe = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets
 
         return self.dataframe

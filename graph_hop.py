@@ -23,7 +23,7 @@ class Graph_hop:
         
     def do_graph(self, time_range=None):
         data = []
-        data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 17), (17, 28), (28, 37), (37, -1)]))
+        data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 18), (18, 27), (27, 36), (36, -1)]))
         self.data_frame = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets
         '''
             I would like to ask the teacher how to implement this thing
