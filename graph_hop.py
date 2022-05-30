@@ -5,8 +5,8 @@ from matplotlib.gridspec import GridSpec
 # from sklearn.linear_model import LinearRegression
 from scipy.optimize import leastsq, curve_fit
 from scipy.integrate import quad
+import os.path
 
-from inverse import x_WLC_f
 
 class Graph_hop:
     def __init__(self, dir_name, number, number_file) -> None:
@@ -20,28 +20,22 @@ class Graph_hop:
         d_aa = 0.58 #nm -> distance between consecutive nucleotides
         N = 46 # number of nucleotides
         self.L = N*d_aa # nm
+        self.nome_txt = self.dir_name + '/' + self.number + 'output.txt' 
+        self.output = self.name # We will copy this string into an output txt file
         
-    def do_graph(self, time_range=None):
+    def do_graph(self, max_time=None, space=0):
         data = []
-        data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 18), (18, 27), (27, 36), (36, -1)]))
+        data.append(pd.read_fwf(self.name+'.txt', colspecs = [(0, 9), (9, 18), (18, 28+space), (28+space, 38+space), (38+space, -1)]))
         self.data_frame = pd.concat([j for j in data], ignore_index=True) # I add together all the datasets
         '''
             I would like to ask the teacher how to implement this thing
         '''
         # self._rebin()
         self.data_frame['time(sec)'] = self.data_frame['time(sec)'].sub(self.data_frame['time(sec)'].loc[0]) 
-        # print(self.data_frame['time(sec)'])
-        # self.data_frame.plot.line(x ='lambda', y='Y_force')
-        if time_range:
-            time_range[0] += 1.95e-3
-            time_range[1] -= 1.95e-3
-            lista = []
-            lista.append(self.data_frame.index[self.data_frame['time(sec)'] == time_range[0]].tolist()[0])
-            lista.append(self.data_frame.index[self.data_frame['time(sec)'] == time_range[1]].tolist()[0])
-            self.data_frame = self.data_frame.loc[lista[0]:lista[1]-1]
-            self.data_frame = self.data_frame.reset_index()
-            self.data_frame = self.data_frame.drop(['index'], axis=1)
-       
+
+        if max_time:
+            self.data_frame = self.data_frame.loc[self.data_frame['time(sec)']<max_time]
+
         self.graph()
         self.histogram()
 
@@ -99,6 +93,7 @@ class Graph_hop:
         plt.title(self.name)
         plt.legend()
         plt.show()
+        self.output += f"f media vale = {df_mean}, con deviazione standard = {df_std}\n"
 
     def histogram(self):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
@@ -129,14 +124,17 @@ class Graph_hop:
         print(f"c_2 = {fitting[3]}, mu_2 = {fitting[4]}, sigma_2 = {fitting[5]}")
         print(f"sigma_c_1 = {err_leastsq[0]}, sigma_mu_1 = {err_leastsq[1]}, sigma_sigma_1 = {err_leastsq[2]}")
         print(f"sigma_c_2 = {err_leastsq[3]}, sigma_mu_2 = {err_leastsq[4]}, sigma_sigma_2 = {err_leastsq[5]}")
-        # w_N = fitting[0][0]*np.sqrt(2*np.pi*fitting[0][2]**2)
-        # w_U = fitting[0][3]*np.sqrt(2*np.pi*fitting[0][5]**2)
+
+        self.output += f"c_1 = {fitting[0]}, mu_1 = {fitting[1]}, sigma_1 = {fitting[2]}\n" + f"c_2 = {fitting[3]}, mu_2 = {fitting[4]}, sigma_2 = {fitting[5]}\n" + \
+            f"sigma_c_1 = {err_leastsq[0]}, sigma_mu_1 = {err_leastsq[1]}, sigma_sigma_1 = {err_leastsq[2]}\n" + f"sigma_c_2 = {err_leastsq[3]}, sigma_mu_2 = {err_leastsq[4]}, sigma_sigma_2 = {err_leastsq[5]}\n"
+
         w_N = fitting[0]*np.sqrt(2*np.pi*fitting[2]**2)
         w_U = fitting[3]*np.sqrt(2*np.pi*fitting[5]**2)
-        sigma_w_N = w_U*np.sqrt((err_leastsq[0]/fitting[0])**2 + (err_leastsq[2]/fitting[2])**2)
-        sigma_w_U = w_N*np.sqrt((err_leastsq[3]/fitting[3])**2 + (err_leastsq[5]/fitting[5])**2)
+        sigma_w_N = w_U*np.sqrt((err_leastsq[0]/fitting[0])**2 + (err_leastsq[2]/(2*fitting[2]))**2)
+        sigma_w_U = w_N*np.sqrt((err_leastsq[3]/fitting[3])**2 + (err_leastsq[5]/(2*fitting[5]))**2)
         print(f"w_U = {w_U}, sigma_w_U = {sigma_w_U}")
         print(f"w_N = {w_N}, sigma_w_N = {sigma_w_N}")
+        self.output += f"w_U = {w_U}, sigma_w_U = {sigma_w_U}\n" + f"w_N = {w_N}, sigma_w_N = {sigma_w_N}\n"
         return [w_U, w_N], [sigma_w_U, sigma_w_N]
 
 
@@ -213,8 +211,7 @@ class Graph_hop:
         plt.title('$w_U\:/\:w_N \:- Linear\: Fit$')
         plt.legend()
         plt.show()
-        # m = reg.coef_[0][0] # angular coefficient
-        # q = reg.intercept_[0] # intercept
+
         x_NU = m
         self.x_NU = x_NU
         sigma_x_nU = sigma_m
@@ -224,8 +221,11 @@ class Graph_hop:
         DeltaG_NU = -q
         sigma_DeltaG_NU = sigma_q
         print(f"La forza di coesistenza vale f_c = {f_c}, con sigma = {sigma_f_c}")
-        print(f"La differenza di lunghezza tra lo stato foldend e unfolded è x_NU = {x_NU}, con sigma = {sigma_x_nU}")
+        print(f"La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = {x_NU}, con sigma = {sigma_x_nU}")
         print(f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}, con sigma = {sigma_DeltaG_NU}")
+        self.output += "\n Linear Fit \n"
+        self.output += f"La forza di coesistenza vale f_c = {f_c}, con sigma = {sigma_f_c}\n" + f"La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = {x_NU}, con sigma = {sigma_x_nU}\n" \
+            f"La differenza di energia libera DeltaG_NU = {DeltaG_NU}, con sigma = {sigma_DeltaG_NU}\n"
         return (x_NU, sigma_x_nU), (f_c, sigma_f_c), (DeltaG_NU, sigma_DeltaG_NU)
         
     def x_d(self, f):
@@ -249,11 +249,11 @@ class Graph_hop:
         G0_meno_sigma = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
         sigma_G0_delta = (G0_piu_sigma-G0_meno_sigma)/np.sqrt(24) # distribuzione triangolare
         print(f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}")
+        self.output += f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}\n"
         return G0_delta, sigma_G0_delta
 
 
-
-        # Hidden Markov Model
+    # Hidden Markov Model - 2 hidden states
     def hmm(self, fitting):
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
         states = []
@@ -276,49 +276,52 @@ class Graph_hop:
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
         states = self.hmm(fitting)
         # Time selection data equals to every dataset
-        # t_min = 0
-        # t_max = 12000
-        native = len([i for i in states if i == mu1]) # up force # [t_min:t_max]
-        unfolded = len([j for j in states if j == mu2]) # or faster: len(states[t_min:t_max]) - native
+        native = len([i for i in states if i == mu1])*1e-3 # up force # [t_min:t_max]
+        unfolded = len([j for j in states if j == mu2])*1e-3 # or faster: len(states[t_min:t_max]) - native
         print(f"La molecola si trova {native} sec nello stato nativo e {unfolded} sec nello stato unfolded")
+        self.output += f"La molecola si trova {native} sec nello stato nativo e {unfolded} sec nello stato unfolded\n"
         return native, unfolded
 
-    def residence_time(self, native_time, unfolded_time, forces, par1=None, par2=None):
-        # grafico forze_medie vs tempi di esistenza stato folded e unfolded    
+    def residence_time(self, native_time, unfolded_time, forces, sigma_forces, par1=None, par2=None):
+        # grafico tempi vs forze_medie di esistenza stato folded e unfolded    
         linear = np.vectorize(self._linear,  excluded=['m', 'q'])
-        guess1 = [-0.1, 10] if not par1 else par1
-        guess2 = [0.1, 5] if not par2 else par2
-        (m_1, q_1), (sigma_m_1, sigma_q_1) = self._linear_fit(forces, np.log(native_time), guess1) # , sigma_y
-        (m_2, q_2), (sigma_m_2, sigma_q_2) = self._linear_fit(forces, np.log(unfolded_time), guess2) # , sigma_y
-        x = np.linspace(min(forces), max(forces), 1000)
+        guess1 = [-10, 100] if not par1 else par1
+        guess2 = [10, -50] if not par2 else par2
+        (m_1, q_1), (sigma_m_1, sigma_q_1) = self._linear_fit(np.log(native_time), forces, guess1, sigma_forces) # , sigma_y
+        (m_2, q_2), (sigma_m_2, sigma_q_2) = self._linear_fit(np.log(unfolded_time), forces, guess2, sigma_forces) # , sigma_y
+        x = np.linspace(min(np.log(native_time+unfolded_time)), max(np.log(native_time+unfolded_time)), 1000)
         y_pred1 = linear(x=x, m=m_1, q=q_1)
         y_pred2 = linear(x=x, m=m_2, q=q_2)
-        f_c = (q_1-q_2)/(m_2-m_1)
-        sigma_f_c = np.sqrt((sigma_q_1**2+sigma_q_2**2)/(m_2-m_1)**2+(sigma_m_1**2+sigma_m_2**2)*((q_1-q_2)/((m_2-m_1)**2))**2)
-        t_c = np.exp((m_2*q_1-m_1*q_2)/(m_2-m_1))
-        sigma_t_c = t_c*np.sqrt(((m_2*sigma_q_1)/(m_2-m_1))**2+((m_1*sigma_q_2)/(m_2-m_1))**2+((m_1*(q_2-q_1)*sigma_m_2)/((m_2-m_1)**2))**2+((m_2*(q_1-q_2)*sigma_m_1)/((m_2-m_1)**2))**2)
-        plt.scatter(forces, np.log(native_time), c='r', label='$t_N$')
+        f_c = (q_2*m_1-q_1*m_2)/(m_1-m_2)
+        sigma_f_c = np.sqrt(((m_2*sigma_q_1)/(m_2-m_1))**2+((m_1*sigma_q_2)/(m_2-m_1))**2+((m_1*sigma_m_2*(q_2-q_1))/((m_2-m_1)**2))**2+((m_2*sigma_m_1*(q_1-q_2))/((m_2-m_1)**2))**2)
+        t_c = np.exp((q_2-q_1)/(m_1-m_2))
+        sigma_t_c = t_c*np.sqrt((sigma_q_2/(m_1-m_2))**2+(sigma_q_1/(m_1-m_2))**2+((q_2-q_1)*sigma_m_1/((m_2-m_1)**2))**2+((sigma_m_2*(q_1-q_2))/((m_2-m_1)**2))**2)
+        plt.errorbar(np.log(native_time), forces, sigma_forces, fmt = 'o', c='r', label='$t_N$')
         plt.plot(x, y_pred1, c='r', label='Fit')
-        plt.scatter(forces, np.log(unfolded_time), c='b', label='$t_U$')
+        plt.errorbar(np.log(unfolded_time), forces, sigma_forces, fmt = 'o', c='b', label='$t_U$')
         plt.plot(x, y_pred2, c='b', label='Fit')
-        x_oriz = np.linspace(min(forces), f_c, 100)
-        y_vert = np.linspace(np.log(min(native_time+unfolded_time)), np.log(t_c), 100)
-        plt.plot(x_oriz, [np.log(t_c)]*x_oriz.shape[0], color = 'g', linestyle = 'dashed', label = '$(f_c,\: t_c)$')
-        plt.plot([f_c]*y_vert.shape[0], y_vert, color = 'g', linestyle = 'dashed')
-        plt.ylabel('$log(t) \: [s]$')
-        plt.xlabel('$\overline{f} \:[pN]$')
+        x_oriz = np.linspace(min(np.log(native_time+unfolded_time)), np.log(t_c), 100)
+        y_vert = np.linspace(min(y_pred2.tolist()+y_pred1.tolist()), f_c, 100)
+        plt.plot(x_oriz, [f_c]*x_oriz.shape[0], color = 'g', linestyle = 'dashed', label = '$(t,\: f_c)$')
+        plt.plot([np.log(t_c)]*y_vert.shape[0], y_vert, color = 'g', linestyle = 'dashed')
+        plt.xlabel('$log(t) \: [s]$')
+        plt.ylabel('$\overline{f} \:[pN]$')
         plt.title('Log Residence Time')
         plt.legend()
         plt.show()
-        beta = (m_2-m_1)/self.x_NU
-        sigma_beta = np.sqrt(sigma_m_1**2+sigma_m_2**2+(beta*self.sigma_x_NU)**2)/self.x_NU
-        DeltaGNU = (q_1-q_2)/beta
-        sigma_DeltaGNU = np.sqrt(sigma_q_1**2+sigma_q_2**2+(DeltaGNU*sigma_beta)**2)/beta
+        beta = (1./m_2-1./m_1)/self.x_NU
+        DeltaGNU = (-q_1/m_1+q_2/m_2)/beta
+        sigma_DeltaGNU = np.sqrt((m_1*self.x_NU*sigma_q_2/(m_1-m_2))**2+(m_2*sigma_q_1*self.x_NU/(m_1-m_2))**2+(m_2*(q_1-q_2)*self.x_NU*sigma_m_1/(m_1-m_2)**2)**2+(m_1*self.x_NU*sigma_m_2*(q_2-q_1)/(m_1-m_2)**2)**2+(DeltaGNU*self.sigma_x_NU/self.x_NU)**2)
         print(f"Stimiamo i parametri del fit lineare: m1 = {m_1}, con incertezza = {sigma_m_1}, \n q1 = {q_1}, con incertezza = {sigma_q_1}")
         print(f"Stimiamo i parametri del fit lineare: m2 = {m_2}, con incertezza = {sigma_m_2}, \n q2 = {q_2}, con incertezza = {sigma_q_2}")
         print(f"La forza di coesistenza qui vale: fc = {f_c}, con incertezza = {sigma_f_c}")
         print(f"Il tempo medi di residenza vale: tc = {t_c}, con incertezza = {sigma_t_c}")
         print(f"Stimiamo un nuovo DeltaG_NU = {DeltaGNU}, con incertezza = {sigma_DeltaGNU}")
+        self.output += "\n Log Residence Time Fit \n"
+        self.output += f"Stimiamo i parametri del fit lineare: m1 = {m_1}, con incertezza = {sigma_m_1}, \n q1 = {q_1}, con incertezza = {sigma_q_1}\n" \
+            + f"Stimiamo i parametri del fit lineare: m2 = {m_2}, con incertezza = {sigma_m_2}, \n q2 = {q_2}, con incertezza = {sigma_q_2}\n" \
+                + f"La forza di coesistenza qui vale: fc = {f_c}, con incertezza = {sigma_f_c}\n" + f"Il tempo medi di residenza vale: tc = {t_c}, con incertezza = {sigma_t_c}\n" \
+                    + f"Stimiamo un nuovo DeltaG_NU = {DeltaGNU}, con incertezza = {sigma_DeltaGNU}\n"
         return (m_1, sigma_m_1), (q_1, sigma_q_1), (m_2, sigma_m_2), (q_2, sigma_q_2), (f_c, sigma_f_c), (t_c, sigma_t_c), (DeltaGNU, sigma_DeltaGNU)
        
 
@@ -367,44 +370,11 @@ class Graph_hop:
             print('#ToDo')
 
         z = out
-        return z*self.L
+        return z*self.L   
 
 
-
-    def linear_inverse(self, native_time, unfolded_time, forces, sigma_forces, par1=None, par2=None):
-        # grafico tempi vs forze_medie di esistenza stato folded e unfolded    
-        linear = np.vectorize(self._linear,  excluded=['m', 'q'])
-        guess1 = [-10, 100] if not par1 else par1
-        guess2 = [10, -50] if not par2 else par2
-        (m_1, q_1), (sigma_m_1, sigma_q_1) = self._linear_fit(np.log(native_time), forces, guess1, sigma_forces) # , sigma_y
-        (m_2, q_2), (sigma_m_2, sigma_q_2) = self._linear_fit(np.log(unfolded_time), forces, guess2, sigma_forces) # , sigma_y
-        x = np.linspace(min(np.log(native_time+unfolded_time)), max(np.log(native_time+unfolded_time)), 1000)
-        y_pred1 = linear(x=x, m=m_1, q=q_1)
-        y_pred2 = linear(x=x, m=m_2, q=q_2)
-        f_c = (q_2*m_1-q_1*m_2)/(m_1-m_2)
-        sigma_f_c = np.sqrt(((m_2*sigma_q_1)/(m_2-m_1))**2+((m_1*sigma_q_2)/(m_2-m_1))**2+((m_1*sigma_m_2*(q_2-q_1))/((m_2-m_1)**2))**2+((m_2*sigma_m_1*(q_1-q_2))/((m_2-m_1)**2))**2)
-        t_c = np.exp((q_2-q_1)/(m_1-m_2))
-        sigma_t_c = t_c*np.sqrt((sigma_q_2/(m_1-m_2))**2+(sigma_q_1/(m_1-m_2))**2+((q_2-q_1)*sigma_m_1/((m_2-m_1)**2))**2+((sigma_m_2*(q_1-q_2))/((m_2-m_1)**2))**2)
-        plt.errorbar(np.log(native_time), forces, sigma_forces, fmt = 'o', c='r', label='$t_N$')
-        plt.plot(x, y_pred1, c='r', label='Fit')
-        plt.errorbar(np.log(unfolded_time), forces, sigma_forces, fmt = 'o', c='b', label='$t_U$')
-        plt.plot(x, y_pred2, c='b', label='Fit')
-        x_oriz = np.linspace(min(np.log(native_time+unfolded_time)), np.log(t_c), 100)
-        y_vert = np.linspace(min(y_pred2.tolist()+y_pred1.tolist()), f_c, 100)
-        plt.plot(x_oriz, [f_c]*x_oriz.shape[0], color = 'g', linestyle = 'dashed', label = '$(t,\: f_c)$')
-        plt.plot([np.log(t_c)]*y_vert.shape[0], y_vert, color = 'g', linestyle = 'dashed')
-        plt.xlabel('$log(t) \: [s]$')
-        plt.ylabel('$\overline{f} \:[pN]$')
-        plt.title('Log Residence Time')
-        plt.legend()
-        plt.show()
-        beta = (1./m_2-1./m_1)/self.x_NU
-        DeltaGNU = (-q_1/m_1+q_2/m_2)/beta
-        sigma_DeltaGNU = np.sqrt((m_1*self.x_NU*sigma_q_2/(m_1-m_2))**2+(m_2*sigma_q_1*self.x_NU/(m_1-m_2))**2+(m_2*(q_1-q_2)*self.x_NU*sigma_m_1/(m_1-m_2)**2)**2+(m_1*self.x_NU*sigma_m_2*(q_2-q_1)/(m_1-m_2)**2)**2+(DeltaGNU*self.sigma_x_NU/self.x_NU)**2)
-        print(f"Stimiamo i parametri del fit lineare: m1 = {m_1}, con incertezza = {sigma_m_1}, \n q1 = {q_1}, con incertezza = {sigma_q_1}")
-        print(f"Stimiamo i parametri del fit lineare: m2 = {m_2}, con incertezza = {sigma_m_2}, \n q2 = {q_2}, con incertezza = {sigma_q_2}")
-        print(f"La forza di coesistenza qui vale: fc = {f_c}, con incertezza = {sigma_f_c}")
-        print(f"Il tempo medi di residenza vale: tc = {t_c}, con incertezza = {sigma_t_c}")
-        print(f"Stimiamo un nuovo DeltaG_NU = {DeltaGNU}, con incertezza = {sigma_DeltaGNU}")
-        return (m_1, sigma_m_1), (q_1, sigma_q_1), (m_2, sigma_m_2), (q_2, sigma_q_2), (f_c, sigma_f_c), (t_c, sigma_t_c), (DeltaGNU, sigma_DeltaGNU)
-       
+    def write_on_txt(self):
+        status = "r" if os.path.isfile(self.nome_txt) else "a"
+        f = open(self.nome_txt, status)
+        f.write(self.output)
+        f.close()

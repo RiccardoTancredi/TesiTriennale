@@ -1,0 +1,31 @@
+P5bp_3bs_hop/21cp/21_7f media vale = 0.37834254004288226, con deviazione standard = 0.2788152691640573
+
+ Linear Fit 
+La forza di coesistenza vale f_c = 4.141730261315241, con sigma = 4.940324743368495
+La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = 0.5991190665082441, con sigma = 0.45889564518559856
+La differenza di energia libera DeltaG_NU = 2.4813895678881335, con sigma = 2.268987700108171
+DeltaG0 = -20.53523311662975, con sigma = -8.755836106758757
+
+ Log Residence Time Fit 
+Stimiamo i parametri del fit lineare: m1 = -0.22340197756859126, con incertezza = 0.007512658891651968, 
+ q1 = 5.279248635456078, con incertezza = 0.008646659782110544
+Stimiamo i parametri del fit lineare: m2 = 0.5232986985798621, con incertezza = 0.014228437948545423, 
+ q2 = 4.250057056813026, con incertezza = 0.021422330990089642
+La forza di coesistenza qui vale: fc = 4.971329490194602, con incertezza = 0.012840818431435173
+Il tempo medi di residenza vale: tc = 3.968224630406343, con incertezza = 0.17018417139789357
+Stimiamo un nuovo DeltaG_NU = 2.978418283470295, con incertezza = 2.281334425445857
+
+ Linear Fit 
+La forza di coesistenza vale f_c = 4.122413466350862, con sigma = 6.29024164363838
+La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = 0.47073314806139505, con sigma = 0.4601678254200046
+La differenza di energia libera DeltaG_NU = 1.9405566686260292, con sigma = 2.2735553206480317
+DeltaG0 = -20.4222338212291, con sigma = -6.904219116558623
+
+ Log Residence Time Fit 
+Stimiamo i parametri del fit lineare: m1 = -16.949367545658184, con incertezza = 0.14047529052896893, 
+ q1 = 27.11589812094488, con incertezza = 0.1833396128487745
+Stimiamo i parametri del fit lineare: m2 = 15.219830351780942, con incertezza = 0.12614095698034208, 
+ q2 = -16.154926770248455, con incertezza = 0.1753327357851819
+La forza di coesistenza qui vale: fc = 4.317284446370328, con incertezza = 0.17900224571155351
+Il tempo medi di residenza vale: tc = 3.8385747695083663, con incertezza = 0.04283187629789099
+Stimiamo un nuovo DeltaG_NU = 2.032288898516401, con incertezza = 1.9884615310168368
