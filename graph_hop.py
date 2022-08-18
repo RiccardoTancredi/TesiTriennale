@@ -142,7 +142,7 @@ class Graph_hop:
     #     plt.plot(self.bin, self.values_histogram_bins)
     #     plt.show()
 
-    def subplots(self, fitting, Markov=True, n_points_fig=None):
+    def subplots(self, fitting, Markov=True, n_points_fig=None, X=None):
         df_mean = self.data_frame['Y_force'].mean()
         df_std = self.data_frame['Y_force'].std()
         # Setting up the plot surface
@@ -155,9 +155,9 @@ class Graph_hop:
         ax0.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         ax0.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         ax0.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')
-        states_hhm = self.hmm(fitting)
+        states_hhm = self.hmm(fitting, X)
         if Markov:
-            ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], color = 'm', label='HMM')
+            ax0.plot(self.data_frame['time(sec)'][:n_points], states_hhm[:n_points], color = 'c', label='HMM')
         ax0.set_ylabel('$f_y\:[pN]$')
         ax0.set_xlabel('$t\:[s]$')
         # ax0.set_title(self.name)
@@ -171,7 +171,8 @@ class Graph_hop:
         ax1.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
         ax1.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
         # ax1.set_ylabel('$f_y$(pN)')
-        ax1.set_yticks([])
+        if n_points_fig:
+            ax1.set_yticks([])
         ax1.set_xlabel('$p(f)\:[1/pN]$')
         # ax1.set_title(self.name+ ': Force Histogram + Fit')
         ax1.legend()
@@ -254,22 +255,29 @@ class Graph_hop:
 
 
     # Hidden Markov Model - 2 hidden states
-    def hmm(self, fitting):
+    def hmm(self, fitting, X = None):
         (c1, mu1, sigma1, c2, mu2, sigma2) = fitting
         states = []
-        for mis in self.data_frame['Y_force']:
-            prob_1 = self._gaussian(mis, [mu1, sigma1])
-            prob_2 = self._gaussian(mis, [mu2, sigma2])
-            if prob_1>prob_2:
-                states.append(mu1)
-            else:
-                states.append(mu2)
+        if X:
+            for x in X:
+                if x == 0:
+                    states.append(mu1)
+                else:
+                    states.append(mu2)
+        else:
+            for mis in self.data_frame['Y_force']:
+                prob_1 = self._gaussian(mis, [mu1, sigma1])
+                prob_2 = self._gaussian(mis, [mu2, sigma2])
+                if prob_1>prob_2:
+                    states.append(mu1)
+                else:
+                    states.append(mu2)
         return np.array(states)
 
 
     def _gaussian(self, x, par):
         mu, sigma = par
-        return np.exp(- (x - mu)**2.0 / (2.0 * sigma**2.0) )/np.sqrt(2*np.pi*sigma)
+        return np.exp(- (x - mu)**2.0 / (2.0 * sigma**2.0) )/np.sqrt(2*np.pi*sigma**2.)
 
 
     def hmm_analysis(self, fitting):
