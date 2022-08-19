@@ -135,7 +135,7 @@ class HMM: # 2 STATES
     
     def learning_problem(self):
         '''
-            Expectation Maximization (EM) algortihm === Baum-Welch algortihm
+            Expectation Maximization (EM) algortihm === Baum-Welch algorithm
         '''
     
         # E-step:
