@@ -181,7 +181,7 @@ class HMM: # 2 STATES
         return self.A, self.PI
 
 
-    def iteration(self, MAX_ITERATION = 10000, epsilon = 0.0001):
+    def iteration(self, MAX_ITERATION = 10000, epsilon = 0.0001, show=True):
         # epsilon this could be use after, or by comparing the Probability P(O|Δ) in the evaluation-problem
         way = 0
         while way < MAX_ITERATION:
@@ -192,7 +192,7 @@ class HMM: # 2 STATES
 
             way += 1
             my_variable = way/MAX_ITERATION*100
-            if way%(int(MAX_ITERATION/100)) == 0:
+            if way%(int(MAX_ITERATION/100)) == 0 and show:
                 print(f"Loading {int(my_variable)}%")
 
         return self.alpha, self.beta, self.X, self.A, self.PI
