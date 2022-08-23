@@ -20,9 +20,9 @@ class HMM: # 2 STATES
         self.par = [self.par_1, self.par_2]
     
     '''
-        There arre 3 problems in HMM Δ:
+        There are 3 problems in HMM Δ:
         - evaluation problem: how to calculate the probability P(O|Δ) of the observation sequence, indicating how much
-            the HMM Δ parameters affects on the sequence O;
+            the HMM Δ parameters affects the sequence O;
         - uncovering problem: how to find the sequence of states X ={x_1, x_2, ....., x_T} so that it is more likely to
             produce the observation sequence O;
         -learning problem: how to adjust parameters of Δ such as initial state distribution PI, transition probability matrix A
