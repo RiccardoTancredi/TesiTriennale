@@ -18,4 +18,4 @@ To solve these problems, 3 algorithm have been introduced: **Forward-backward al
 
 ![](hmm.gif)
 
-The picture illustrates the 2-hidden states in a $(t,\: f_y)$ _hopping_ plot.
+The picture illustrates the 2-hidden states in an _hopping_ plot.
