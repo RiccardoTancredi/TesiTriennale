@@ -1,11 +1,4 @@
-from turtle import forward
-from xml.etree.ElementTree import PI
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.optimize import leastsq, curve_fit
-from scipy.integrate import quad
-import os.path
 
 class HMM: # 2 STATES
     def __init__(self, number_of_states, A, PI, O, params) -> None:
