@@ -312,7 +312,7 @@ class Graph_hop:
         y_vert = np.linspace(min(y_pred2.tolist()+y_pred1.tolist()), f_c, 100)
         plt.plot(x_oriz, [f_c]*x_oriz.shape[0], color = 'g', linestyle = 'dashed', label = '$(t,\: f_c)$')
         plt.plot([np.log(t_c)]*y_vert.shape[0], y_vert, color = 'g', linestyle = 'dashed')
-        plt.xlabel('$log(t) \: [log(s)]$')
+        plt.xlabel('$log(t) \: [s]$')
         plt.ylabel('$\overline{f} \:[pN]$')
         # plt.title('Log Residence Time')
         plt.legend()
