@@ -5,34 +5,34 @@ sigma_c_1 = 0.06593382650601691, sigma_mu_1 = 0.011122411042518094, sigma_sigma_
 sigma_c_2 = 0.046484811461164045, sigma_mu_2 = 0.005171387364493342, sigma_sigma_2 = 0.005246348686729871
 w_U = 0.8431936849257468, sigma_w_U = 0.004589060801545252
 w_N = 0.1595329869181638, sigma_w_N = 0.09608774604397305
-La molecola si trova 2.048 sec nello stato nativo e 9.819 sec nello stato unfolded
+La molecola si trova 2.072 sec nello stato nativo e 9.795 sec nello stato unfolded
 
  Linear Fit 
 La forza di coesistenza vale f_c = 3.4214095131671325, con sigma = 1.1980953477339213
 La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = 5.949383407333073, con sigma = 1.534743969430942
 La differenza di energia libera DeltaG_NU = 20.355276987328065, con sigma = 4.820217310059997
-DeltaG0 = -16.228758591264253, con sigma = -2.9443939570675184
+DeltaG0 = 23.720949294473947, con sigma = 5.639949490063236
 
  Log Residence Time Fit 
-Stimiamo i parametri del fit lineare: m1 = -1.022282061868502, con incertezza = 0.006863891704214679, 
- q1 = 5.070321145208432, con incertezza = 0.009493673022062065
-Stimiamo i parametri del fit lineare: m2 = 1.2558173051778252, con incertezza = 0.0082270281785004, 
- q2 = 1.5139039293237289, con incertezza = 0.01609193469514548
-La forza di coesistenza qui vale: fc = 3.47440238200142, con incertezza = 0.012150857982476152
-Il tempo medi di residenza vale: tc = 4.764218380574168, con incertezza = 0.05244386669809966
-Stimiamo un nuovo DeltaG_NU = 20.670551881877753, con incertezza = 5.332808098331804
+Stimiamo i parametri del fit lineare: m1 = -1.026458876855237, con incertezza = 0.006893354546883035, 
+ q1 = 5.085294542633062, con incertezza = 0.009581645362514449
+Stimiamo i parametri del fit lineare: m2 = 1.2308834264925725, con incertezza = 0.008097526581378533, 
+ q2 = 1.5705818095912811, con incertezza = 0.01579813138268859
+La forza di coesistenza qui vale: fc = 3.4870840811198205, con incertezza = 0.012084017925104022
+Il tempo medi di residenza vale: tc = 4.744630841798158, con incertezza = 0.0521477896322086
+Stimiamo un nuovo DeltaG_NU = 20.746000172189554, con incertezza = 5.352264121579366
 
  Linear Fit 
 La forza di coesistenza vale f_c = 3.4247555178061253, con sigma = 1.199957987634292
 La differenza di lunghezza tra lo stato foldend e unfolded e' x_NU = 5.943433198647988, con sigma = 1.5348063690853027
 La differenza di energia libera DeltaG_NU = 20.354805641781805, con sigma = 4.8202175726670635
-DeltaG0 = -16.249156451063055, con sigma = -2.948567795113413
+DeltaG0 = 23.760028516882738, con sigma = 5.651516874953974
 
  Log Residence Time Fit 
-Stimiamo i parametri del fit lineare: m1 = -1.1751848367675521, con incertezza = 0.007205211347702675, 
- q1 = 5.310582154975161, con incertezza = 0.010098837560362244
-Stimiamo i parametri del fit lineare: m2 = 1.305249020036893, con incertezza = 0.008307676928037657, 
- q2 = 1.4562984497495683, con incertezza = 0.01614810618191607
-La forza di coesistenza qui vale: fc = 3.484492031847772, con incertezza = 0.01260517122504363
-Il tempo medi di residenza vale: tc = 4.729761682385754, con incertezza = 0.048791814764351515
-Stimiamo un nuovo DeltaG_NU = 20.709845622508432, con incertezza = 5.348545283849464
+Stimiamo i parametri del fit lineare: m1 = -1.1794339769755062, con incertezza = 0.007234706541242334, 
+ q1 = 5.327024330005317, con incertezza = 0.010190685431086786
+Stimiamo i parametri del fit lineare: m2 = 1.2792569956985866, con incertezza = 0.00817652183646069, 
+ q2 = 1.5152329755969083, con incertezza = 0.015851309658177066
+La forza di coesistenza qui vale: fc = 3.4985081453783655, con incertezza = 0.012528584906174204
+Il tempo medi di residenza vale: tc = 4.713042435557599, con incertezza = 0.04855477360576284
+Stimiamo un nuovo DeltaG_NU = 20.793149456982178, con incertezza = 5.370048871140548

@@ -240,14 +240,14 @@ class Graph_hop:
         f_c, sigma_f_c = fc
         x_fc = self.x_WLC_f(f_c) # extension at f_c, by inverting the formula for the force in the WLC model (see below)
         # calculate integral using basic scipy method
-        G0_delta = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0] # check if these integrals are correct
+        G0_delta = x_fc*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0] # check if these integrals are correct
         # calcolo incertezza
         f_c += sigma_f_c
         x_fc = self.x_WLC_f(f_c)
-        G0_piu_sigma = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
+        G0_piu_sigma = x_fc*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
         f_c -= 2*sigma_f_c
         x_fc = self.x_WLC_f(f_c)
-        G0_meno_sigma = self.x_d(f_c)*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
+        G0_meno_sigma = x_fc*f_c-quad(self.f_WLC, 0, x_fc)[0] - quad(self.x_d, 0, f_c)[0]
         sigma_G0_delta = (G0_piu_sigma-G0_meno_sigma)/np.sqrt(24) # distribuzione triangolare
         print(f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}")
         self.output += f"DeltaG0 = {G0_delta}, con sigma = {sigma_G0_delta}\n"
