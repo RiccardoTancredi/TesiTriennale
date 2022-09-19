@@ -84,7 +84,7 @@ class Graph_hop:
         df_mean = self.data_frame['Y_force'].mean()
         df_std = self.data_frame['Y_force'].std()
         print(f"f media vale = {df_mean}, con deviazione standard = {df_std}")
-        plt.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Y_force')
+        plt.plot(self.data_frame['time(sec)'], self.data_frame['Y_force'], label='Data')
         plt.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         plt.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         plt.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')   
@@ -102,7 +102,7 @@ class Graph_hop:
         plt.xlabel('$p(f)\:[1/pN]$')
         # plt.title(self.name+ ': Force Histogram')
         # self.data_frame['Y_force'].hist(grid=False, bins=rice)
-        self.values_histogram_bins, bins, patches = plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True) # y
+        self.values_histogram_bins, bins, patches = plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Data', stacked=True) # y
         self.bin = [(bins[i+1] + bins[i])/2 for i in range(len(bins)-1)] # x
         self.values_histogram_bins_proc = np.copy(self.values_histogram_bins)
         self.values_histogram_bins_proc[self.values_histogram_bins_proc < 0.05] = 0.0
@@ -111,7 +111,7 @@ class Graph_hop:
     
     def _fit_plot(self, fitting, err_leastsq):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
-        plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
+        plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Data', stacked=True)
         plt.plot(self._doublegaussian(fitting, self.bin), self.bin, c='r', label='Fit')
         plt.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$f_U$')
         plt.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$f_N$')    
@@ -166,7 +166,7 @@ class Graph_hop:
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         ax1 = fig.add_subplot(gs[0, 2:4])
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
-        ax1.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Force Y', stacked=True)
+        ax1.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Data', stacked=True)
         ax1.plot(self._doublegaussian(fitting, self.bin), self.bin, c='r', label='Fit')
         ax1.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$\mu_1$')
         ax1.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$\mu_2$')    
