@@ -88,8 +88,8 @@ class Graph_hop:
         plt.axhline(y = df_mean, color = 'b', linestyle = 'dashed', label = '$\mu$')    
         plt.axhline(y = df_mean+3*df_std, color = 'r', linestyle = 'dashed', label = '$\mu\pm3\sigma$')   
         plt.axhline(y = df_mean-3*df_std, color = 'r', linestyle = 'dashed')   
-        plt.ylabel('$f_y\:[pN]$')
-        plt.xlabel('$t\:[s]$')
+        plt.ylabel('$f_y\:[pN]$', fontsize=15)
+        plt.xlabel('$t\:[s]$', fontsize=15)
         # plt.title(self.name)
         plt.legend()
         plt.show()
@@ -98,8 +98,8 @@ class Graph_hop:
     def histogram(self):
         rice = int(6*np.cbrt(self.data_frame.shape[0]))
         # scott = int(3.49*self.data_frame['Y_force'].std()/np.cbrt(self.data_frame.shape[0]))
-        plt.ylabel('$f_y\:[pN]$')
-        plt.xlabel('$p(f)\:[1/pN]$')
+        plt.ylabel('$f_y\:[pN]$', fontsize=15)
+        plt.xlabel('$p(f)\:[1/pN]$', fontsize=15)
         # plt.title(self.name+ ': Force Histogram')
         # self.data_frame['Y_force'].hist(grid=False, bins=rice)
         self.values_histogram_bins, bins, patches = plt.hist(self.data_frame['Y_force'], density=True, bins=rice, orientation='horizontal', label='Data', stacked=True) # y
@@ -115,8 +115,8 @@ class Graph_hop:
         plt.plot(self._doublegaussian(fitting, self.bin), self.bin, c='r', label='Fit')
         plt.axhline(y = fitting[1], color = 'g', linestyle = 'dashed', label = '$f_U$')
         plt.axhline(y = fitting[4], color = 'y', linestyle = 'dashed', label = '$f_N$')    
-        plt.ylabel('$f_y\:[pN]$')
-        plt.xlabel('$p(f)\:[1/pN]$')
+        plt.ylabel('$f_y\:[pN]$', fontsize=15)
+        plt.xlabel('$p(f)\:[1/pN]$', fontsize=15)
         # plt.title(self.name+ ': Force Histogram + Fit')
         plt.legend()
         plt.show()
@@ -190,7 +190,7 @@ class Graph_hop:
         sigmas = np.sqrt(np.diag(pcov))
         return popt, sigmas
 
-    def deltaG(self, w_U, w_N, forces, sigma_w_U, sigma_w_N, par=None):
+    def deltaG(self, w_U, w_N, forces, sigma_w_U, sigma_w_N, par=None, particolare=None, zoom_out=None):
         # linear fit: k_B T log(w_U/w_N) = (f-f_c)*x_NU = m*f + q, m = x_NU, q = f_c*x_NU 
         y = [self.KBT*np.log(w_U[i]/w_N[i]) for i in range(len(w_U))]
         sigma_y = [self.KBT*np.sqrt((sigma_w_U[i]/w_U[i])**2+(sigma_w_N[i]/w_N[i])**2) for i in range(len(sigma_w_N))]
@@ -205,11 +205,16 @@ class Graph_hop:
         y_pred = linear(x=x, m=m, q=q)
         y = np.array(y).reshape(-1, 1)
         x = np.array(x).reshape(-1, 1)
-        plt.ylabel('$ln(w_U\:/\:w_N)$')
-        plt.xlabel('$f\:[pN]$')
+        plt.ylabel('$ln(w_U\:/\:w_N)$', fontsize=15)
+        plt.xlabel('$f\:[pN]$', fontsize=15)
         plt.errorbar(x, y, sigma_y, fmt = 'o', color='blue', label = 'Data')
         plt.plot(x, y_pred, color='red', label = 'Fit')
         # plt.title('$w_U\:/\:w_N \:- Linear\: Fit$')
+        if particolare:
+            plt.axvline(x = 3, ymin=np.exp(-15), ymax=np.exp(0.2), color = 'g', linestyle = '--')
+        if zoom_out:
+            plt.xlim(2.5, 5.5)
+            plt.ylim(-15, 20)
         plt.legend()
         plt.show()
 
