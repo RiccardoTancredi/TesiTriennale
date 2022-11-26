@@ -1,6 +1,6 @@
 # Hopping Measurements
 
-This thesis work is based on single molecule experiments, perfomed by hopping measurements via Optical Tweezers at the _University of Padua_.
+This thesis work is based on single molecule experiments, performed by hopping measurements via Optical Tweezers at the _University of Padua_.
 
 Optical Tweezers are an amazing tool which uses light to manipulate biomolecule such as DNA _hairpins_ or proteins; using two counterpropagating laser beams it is possible to trap these molecules and to perform _hopping_ experiments, i.e. to observe the biosensor passing throug its equilibrium configurations.
 
